@@ -1,4 +1,4 @@
-using ResumeProject.Components;
+using ResumeProject.Blazor.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
