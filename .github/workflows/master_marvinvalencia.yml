@@ -24,10 +24,10 @@ jobs:
           dotnet-version: 'v8.0'
 
       - name: Build with dotnet
-        run: dotnet build ResumeProject.Blazor --configuration Release
+        run: dotnet build --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish ResumeProject.Blazor -c Release -o "${{env.DOTNET_ROOT}}/myapp"
+        run: dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -54,9 +54,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_FFD7BBB26FC84C1CA64CC6D09F9B136D }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_4C61040494894AE98723007B5049681A }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_1BCC2B9B1C1E45C3941BC1AE52F135C7 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_EF68A96C962C494182121B40396EA9F4 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_E58B5163343E4B67878CD70F29474D7B }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_2622077A8A90497FBE480D6BFCAF3F17 }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
