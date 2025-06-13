@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using ResumeProject.Infrastructure.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,14 +10,44 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddDbContext<AppDbContext>(optionsBuilder =>
+{
+    optionsBuilder.UseAzureSql(builder.Configuration["DefaultConnection"]);
+});
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI();
+
+app.Use(async (context, next) =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    if (context.Request.Path.StartsWithSegments("/swagger"))
+    {
+        string? authHeader = context.Request.Headers.Authorization;
+
+        if (authHeader != null && authHeader.StartsWith("Basic "))
+        {
+            var encodedUsernamePassword = authHeader.Substring("Basic ".Length).Trim();
+            var decodedUsernamePassword = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(encodedUsernamePassword));
+            var username = decodedUsernamePassword.Split(':')[0];
+            var password = decodedUsernamePassword.Split(':')[1];
+
+            if (username == "yourusername" && password == "yourpassword")
+            {
+                await next.Invoke();
+                return;
+            }
+        }
+
+        context.Response.Headers["WWW-Authenticate"] = "Basic";
+        context.Response.StatusCode = 401;
+        await context.Response.WriteAsync("Unauthorized");
+        return;
+    }
+
+    await next.Invoke();
+});
 
 app.UseHttpsRedirection();
 
