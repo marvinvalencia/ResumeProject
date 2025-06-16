@@ -1,0 +1,188 @@
+﻿@page "/skills"
+
+<PageTitle>Skills</PageTitle>
+    
+<section class="resume-section" id="skills">
+    <div class="resume-section-content">
+        <h2 class="mb-5">Skills</h2>
+        <div class="subheading mb-3">Programming Languages & Tools</div>
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>Skill</th>
+                    <th>Level</th>
+                    <th>Years of Experience</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div>
+                            <img class="@($"{csharp.Class} h-8 w-8 rounded-md")" loading="lazy" width="32" height="32" src="@csharp.Icon" alt="@csharp.Name" />
+                            <span class="font-semibold">@csharp.Name</span>
+                        </div>
+                    </td>
+                    <td>Expert</td>
+                    <td>11</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div>
+                            <img class="@($"{dotnet.Class} h-8 w-8 rounded-md")" loading="lazy" width="32" height="32" src="@dotnet.Icon" alt="@dotnet.Name" />
+                            <span class="font-semibold">@dotnet.Name</span>
+                        </div>
+                    </td>
+                    <td>Expert</td>
+                    <td>11</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div>
+                            <img class="@($"{sqlServer.Class} h-8 w-8 rounded-md")" loading="lazy" width="32" height="32" src="@sqlServer.Icon" alt="@sqlServer.Name" />
+                            <span class="font-semibold">@sqlServer.Name</span>
+                        </div>
+                    </td>
+                    <td>Expert</td>
+                    <td>11</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div>
+                            <img class="@($"{vb6.Class} h-8 w-8 rounded-md")" loading="lazy" width="32" height="32" src="@vb6.Icon" alt="@vb6.Name" />
+                            <span class="font-semibold">@vb6.Name</span>
+                        </div>
+                    </td>
+                    <td>Expert</td>
+                    <td>6</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div>
+                            <img class="@($"{wpf.Class} h-8 w-8 rounded-md")" loading="lazy" width="32" height="32" src="@wpf.Icon" alt="@wpf.Name" />
+                            <span class="font-semibold">@wpf.Name</span>
+                        </div>
+                    </td>
+                    <td>Proficient</td>
+                    <td>3</td>
+                </tr>
+                <tr>
+                    <td>Unit Testing</td>
+                    <td>Proficient</td>
+                    <td>11</td>
+                </tr>
+                <tr>
+                    <td>Entity Framework</td>
+                    <td>Proficient</td>
+                    <td>11</td>
+                </tr>
+                <tr>
+                    <td>Rest API</td>
+                    <td>Proficient</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div>
+                            <img class="@($"{blazor.Class} h-8 w-8 rounded-md")" loading="lazy" width="32" height="32" src="@blazor.Icon" alt="@blazor.Name" />
+                            <span class="font-semibold">@blazor.Name</span>
+                        </div>
+                    </td>
+                    <td>Proficient</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div>
+                            <img class="@($"{telerik.Class} h-8 w-8 rounded-md")" loading="lazy" width="32" height="32" src="@telerik.Icon" alt="@telerik.Name" />
+                            <span class="font-semibold">@telerik.Name</span>
+                        </div>
+                    </td>
+                    <td>Proficient</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Microservices</td>
+                    <td>Proficient</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div>
+                            <img class="@($"{python.Class} h-8 w-8 rounded-md")" loading="lazy" width="32" height="32" src="@python.Icon" alt="@python.Name" />
+                            <span class="font-semibold">@python.Name</span>
+                        </div>
+                    </td>
+                    <td>Intermediate</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+<hr class="m-0" />
+
+@code {
+    // Define Technology class
+    public class Technology
+    {
+        public string Name { get; set; }
+        public string Icon { get; set; }
+        public string Class { get; set; }
+    }
+
+    private Technology csharp = new Technology
+    {
+        Name = "C#",
+        Icon = "assets/icons/csharp.svg",
+        Class = "c#"
+    };
+
+    private Technology dotnet = new Technology
+    {
+        Name = ".NET",
+        Icon = "assets/icons/dotnet.svg",
+        Class = "dotnet"
+    };
+
+    private Technology sqlServer = new Technology
+    {
+        Name = "SQL Server",
+        Icon = "assets/icons/sqlserver.svg",
+        Class = "sqlserver"
+    };  
+
+    private Technology vb6 = new Technology
+    {
+        Name = "VB6",
+        Icon = "assets/icons/visualbasic.svg",
+        Class = "vb6"
+    };
+
+    private Technology wpf = new Technology
+    {
+        Name = "WPF",
+        Icon = "assets/icons/wpf.svg",
+        Class = "wpf"
+    };  
+
+    private Technology telerik = new Technology
+    {
+        Name = "Telerik",
+        Icon = "assets/icons/telerik.svg",
+        Class = "telerik"
+    };  
+
+    private Technology blazor = new Technology
+    {
+        Name = "Blazor",
+        Icon = "assets/icons/blazor.svg",
+        Class = "blazor"
+    };
+
+    private Technology python = new Technology
+    {
+        Name = "Python",
+        Icon = "assets/icons/python.svg",
+        Class = "python"
+    };
+}

@@ -10975,3 +10975,8 @@ section.resume-section .resume-section-content {
     padding-bottom: 5rem;
   }
 }
+
+#blazor-error-ui {
+    display: none;
+    /* other styles */
+}
