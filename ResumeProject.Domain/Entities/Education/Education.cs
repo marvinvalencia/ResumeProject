@@ -14,6 +14,6 @@ namespace ResumeProject.Domain.Entities
         public DateTime? EndDate { get; set; } // Nullable to allow for ongoing education
         public string Major { get; set; } = string.Empty;
         public double GPA { get; set; } // Optional, can be nullable if not applicable
-        public Resume Resume { get; set; } = null!; // Navigation property to the Resume entity
+        public Resume? Resume { get; set; } = null; // Navigation property to the Resume entity
     }
 }

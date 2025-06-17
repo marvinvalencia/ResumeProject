@@ -11,6 +11,6 @@ namespace ResumeProject.Domain.Entities
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public int ProficiencyLevel { get; set; } // 1 to 5 scale, where 1 is beginner and 5 is expert
-        public Resume Resume { get; set; } = null!; // Navigation property to the Resume entity
+        public Resume? Resume { get; set; } = null; // Navigation property to the Resume entity
     }
 }

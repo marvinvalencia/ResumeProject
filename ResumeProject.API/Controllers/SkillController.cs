@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ResumeProject.Domain.Entities;
@@ -8,6 +9,7 @@ namespace ResumeProject.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class SkillController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -17,14 +19,14 @@ namespace ResumeProject.API.Controllers
             _context = context;
         }
 
-        // GET: api/Education
+        // GET: api/Skill
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Skill>>> GetAll()
         {
             return await _context.Skill.ToListAsync();
         }
 
-        // GET: api/Education/5
+        // GET: api/Skill/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Skill>> Get(Guid id)
         {
@@ -35,9 +37,9 @@ namespace ResumeProject.API.Controllers
             return skill;
         }
 
-        // POST: api/Education
+        // POST: api/Skill
         [HttpPost]
-        public async Task<ActionResult<Experience>> Create(Skill skill)
+        public async Task<ActionResult<Skill>> Create(Skill skill)
         {
             _context.Skill.Add(skill);
             await _context.SaveChangesAsync();
@@ -45,7 +47,7 @@ namespace ResumeProject.API.Controllers
             return CreatedAtAction(nameof(Get), new { id = skill.Id }, skill);
         }
 
-        // PUT: api/Education/5
+        // PUT: api/Skill/5
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, Skill skill)
         {
@@ -69,7 +71,7 @@ namespace ResumeProject.API.Controllers
             return NoContent();
         }
 
-        // DELETE: api/Education/5
+        // DELETE: api/Skill/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {

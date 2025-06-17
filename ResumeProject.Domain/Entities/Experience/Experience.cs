@@ -13,6 +13,6 @@ namespace ResumeProject.Domain.Entities
         public string Description { get; set; } = string.Empty;
         public DateTime StartDate { get; set; }
         public DateTime? EndDate { get; set; } // Nullable to allow for ongoing positions
-        public Resume Resume { get; set; } = null!; // Navigation property to the Resume entity
+        public Resume? Resume { get; set; } = null; // Navigation property to the Resume entity
     }
 }
