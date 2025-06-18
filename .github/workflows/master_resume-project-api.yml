@@ -3,6 +3,9 @@
 
 name: Build and deploy ASP.Net Core app to Azure Web App - resume-project-api
 
+env:
+  JWT_SECRET: ${{ secrets.JWT_SECRET }}  
+
 on:
   push:
     branches:
@@ -27,7 +30,9 @@ jobs:
         run: dotnet build ResumeProject.API --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish ResumeProject.API -c Release -o "${{env.DOTNET_ROOT}}/myapp"
+        run: |
+            echo "JWT_SECRET=$JWT_SECRET" >> $GITHUB_ENV
+            dotnet publish ResumeProject.API -c Release -o "${{env.DOTNET_ROOT}}/myapp"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4

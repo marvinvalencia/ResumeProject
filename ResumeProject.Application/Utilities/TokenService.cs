@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using ResumeProject.Application.Interfaces;
@@ -10,19 +11,26 @@ using System.Text;
 
 namespace ResumeProject.Application.Utilities
 {
-    public class TokenService()
+    public class TokenService
     {
+        private readonly string _jwtSecret;
+
+        public TokenService(IConfiguration configuration)
+        {
+            this._jwtSecret = configuration["JWT_SECRET"] ?? throw new InvalidOperationException("JWT_SECRET not found.");
+        }
+
         public string GenerateToken(string email)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = "qH8$zB4@rL3w!9Xp#MfT2vC6&nJe0uKd"u8.ToArray(); // Replace with your actual secret key
+            var key = Encoding.UTF8.GetBytes(_jwtSecret);
 
             var claims = new List<Claim>()
-            {
-                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                //new(JwtRegisteredClaimNames.Sub, userId.ToString()),
-                new(JwtRegisteredClaimNames.Email, email)
-            };
+                {
+                    new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    //new(JwtRegisteredClaimNames.Sub, userId.ToString()),
+                    new(JwtRegisteredClaimNames.Email, email)
+                };
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
