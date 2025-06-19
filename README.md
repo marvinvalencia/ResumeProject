@@ -1,5 +1,8 @@
 Hi, This is my personal learning project where I explore Blazor, Entity Framework Core, ASP.NET Core, and .NET 8.
 
+Blazor: [Resume Site](https://marvinvalencia-bkcredfvbtd3cbgs.southeastasia-01.azurewebsites.net) <br/>
+ASP.Net Core: [My API in Swagger](https://resume-project-api-ama4f0fbfde9cxge.southeastasia-01.azurewebsites.net/swagger/index.html)<br/>
+
 The aim is to build a full-stack web application while applying modern web development practices using the Microsoft ecosystem.
 
 🚀 Goals & Feature Checklist <br/>
@@ -12,7 +15,7 @@ The aim is to build a full-stack web application while applying modern web devel
 ✅ Use Entity Framework Core for data access <br/>
 ✅ Add basic CRUD operations for resume/profile data <br/>
 
-🖥️ Blazor WebAssembly Functionality TODO <br/>
+🖥️ Blazor WebAssembly Functionality <br/>
 ✅ Implement routing and navigation (e.g., /home, /projects, /contact) <br/>
 ✅ Add layout components (MainLayout, NavMenu, Footer) <br/>
 🔲 Build form pages using EditForm, InputText, InputSelect, InputDate <br/>
@@ -26,7 +29,7 @@ The aim is to build a full-stack web application while applying modern web devel
 🔲 Dark mode toggle with CSS classes <br/>
 🔲 Export to PDF or Excel (e.g., resume download) <br/>
 
-🛠️ Backend Enhancements (Planned) <br/>
+🛠️ Backend Enhancements <br/>
 🔲 Integrate Redis for caching (e.g., user sessions, lookups) <br/>
 🔲 Add Azure Service Bus (or RabbitMQ) for asynchronous messaging / background tasks <br/>
 🔲 Setup SignalR for real-time updates (e.g., notifications, live edits) <br/>
@@ -52,7 +55,7 @@ The aim is to build a full-stack web application while applying modern web devel
 🔲 Add integration tests for API endpoints <br/>
 
 📌 Tech Stack <br/>
-Frontend: Blazor WebAssembly <br/>
+Frontend: Blazor WebAssembly /<br/>
 Backend: ASP.NET Core (.NET 8) <br/>
 Database: Azure SQL using Entity Framework Core <br/>
 Authentication: JWT <br/>
