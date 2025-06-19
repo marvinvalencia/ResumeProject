@@ -5,7 +5,7 @@ name: Build and deploy ASP.Net Core app to Azure Web App - resume-project-api
 
 env:
   JWT_SECRET: ${{ secrets.JWT_SECRET }}  
-  DefaultConnection: ${{ secrets.DefaultConnection }} 
+  DefaultConnection: ${{ secrets.DEFAULTCONNECTION }} 
 
 on:
   push:
@@ -33,7 +33,7 @@ jobs:
       - name: dotnet publish
         run: |
             echo "JWT_SECRET=$JWT_SECRET" >> $GITHUB_ENV
-            echo "DefaultConnection=$DefaultConnection" >> $GITHUB_ENV
+            echo "DEFAULTCONNECTION=DEFAULTCONNECTION" >> $GITHUB_ENV
             dotnet publish ResumeProject.API -c Release -o "${{env.DOTNET_ROOT}}/myapp"
 
       - name: Upload artifact for deployment job
