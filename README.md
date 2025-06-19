@@ -2,58 +2,58 @@ Hi, This is my personal learning project where I explore Blazor, Entity Framewor
 
 The aim is to build a full-stack web application while applying modern web development practices using the Microsoft ecosystem.
 
-🚀 Goals & Feature Checklist
+🚀 Goals & Feature Checklist <br/>
 ✅ = Done | 🔲 = To-do
 
-🔧 Core Features & Architecture
-✅ Setup ASP.NET Core Web API
-✅ Setup Blazor WebAssembly Frontend
-✅ Implement Clean Architecture (Domain, Application, Infrastructure, Web layers)
-✅ Use Entity Framework Core for data access
-✅ Add basic CRUD operations for resume/profile data
+🔧 Core Features & Architecture <br/>
+✅ Setup ASP.NET Core Web API <br/>
+✅ Setup Blazor WebAssembly Frontend <br/>
+✅ Implement Clean Architecture (Domain, Application, Infrastructure, Web layers) <br/>
+✅ Use Entity Framework Core for data access <br/>
+✅ Add basic CRUD operations for resume/profile data <br/>
 
-🖥️ Blazor WebAssembly Functionality TODO
-✅ Implement routing and navigation (e.g., /home, /projects, /contact)
-✅ Add layout components (MainLayout, NavMenu, Footer)
-🔲 Build form pages using EditForm, InputText, InputSelect, InputDate
-🔲 Use model validation with DataAnnotations
-🔲 Add real-time form validation feedback
-🔲 Call protected endpoints using HttpClient with JWT bearer token
-🔲 Handle loading, success, and error UI states (spinners, toast alerts)
-🔲 Add file upload and image preview
-🔲 Integrate with SignalR for real-time updates
-🔲 Add global error handler and user-friendly error pages
-🔲 Dark mode toggle with CSS classes
-🔲 Export to PDF or Excel (e.g., resume download)
+🖥️ Blazor WebAssembly Functionality TODO <br/>
+✅ Implement routing and navigation (e.g., /home, /projects, /contact) <br/>
+✅ Add layout components (MainLayout, NavMenu, Footer) <br/>
+🔲 Build form pages using EditForm, InputText, InputSelect, InputDate <br/>
+🔲 Use model validation with DataAnnotations <br/>
+🔲 Add real-time form validation feedback <br/>
+🔲 Call protected endpoints using HttpClient with JWT bearer token <br/>
+🔲 Handle loading, success, and error UI states (spinners, toast alerts) <br/>
+🔲 Add file upload and image preview <br/>
+🔲 Integrate with SignalR for real-time updates <br/>
+🔲 Add global error handler and user-friendly error pages <br/>
+🔲 Dark mode toggle with CSS classes <br/>
+🔲 Export to PDF or Excel (e.g., resume download) <br/>
 
-🛠️ Backend Enhancements (Planned)
-🔲 Integrate Redis for caching (e.g., user sessions, lookups)
-🔲 Add Azure Service Bus (or RabbitMQ) for asynchronous messaging / background tasks
-🔲 Setup SignalR for real-time updates (e.g., notifications, live edits)
-🔲 Use BackgroundServices / Hosted Services for scheduled tasks or workers
-🔲 Add support for global exception handling and structured logging
-🔲 Use Serilog or Application Insights for logging and monitoring
+🛠️ Backend Enhancements (Planned) <br/>
+🔲 Integrate Redis for caching (e.g., user sessions, lookups) <br/>
+🔲 Add Azure Service Bus (or RabbitMQ) for asynchronous messaging / background tasks <br/>
+🔲 Setup SignalR for real-time updates (e.g., notifications, live edits) <br/>
+🔲 Use BackgroundServices / Hosted Services for scheduled tasks or workers <br/>
+🔲 Add support for global exception handling and structured logging <br/>
+🔲 Use Serilog or Application Insights for logging and monitoring <br/>
 
-🔐 Security & Secrets
-✅ Add simple JWT Authentication and Authorization
-✅ Store secrets using GitHub Secrets, secure app settings and API keys properly
-🔲 Show/hide content based on user roles (@attribute [Authorize(Roles = "Admin")])
+🔐 Security & Secrets <br/>
+✅ Add simple JWT Authentication and Authorization <br/>
+✅ Store secrets using GitHub Secrets, secure app settings and API keys properly <br/>
+🔲 Show/hide content based on user roles (@attribute [Authorize(Roles = "Admin")]) <br/>
 
-☁️ Deployment & CI/CD
-✅ Deploy REST API (ASP.NET Core) for Resume entities
-✅ Deploy Blazor WebAssembly App 
-✅ Setup GitHub Actions for CI/CD pipeline
-🔲 Dockerize API and Blazor apps for consistent builds and multi-cloud support
-🔲 Deploy to AWS (Elastic Beanstalk, ECS, or S3 + CloudFront for Blazor WASM)
-🔲 Store cloud-specific config and secrets using Azure App Settings or AWS Parameter Store
+☁️ Deployment & CI/CD <br/>
+✅ Deploy REST API (ASP.NET Core) for Resume entities <br/>
+✅ Deploy Blazor WebAssembly App  <br/>
+✅ Setup GitHub Actions for CI/CD pipeline <br/>
+🔲 Dockerize API and Blazor apps for consistent builds and multi-cloud support <br/>
+🔲 Deploy to AWS (Elastic Beanstalk, ECS, or S3 + CloudFront for Blazor WASM) <br/>
+🔲 Store cloud-specific config and secrets using Azure App Settings or AWS Parameter Store <br/>
 
-🧪 Testing
-🔲 Add unit tests for application services
-🔲 Add integration tests for API endpoints
+🧪 Testing <br/>
+🔲 Add unit tests for application services <br/>
+🔲 Add integration tests for API endpoints <br/>
 
-📌 Tech Stack
-Frontend: Blazor WebAssembly
-Backend: ASP.NET Core (.NET 8)
-Database: Azure SQL using Entity Framework Core
-Authentication: JWT 
-DevOps: GitHub Actions, Azure App Service 
+📌 Tech Stack <br/>
+Frontend: Blazor WebAssembly <br/>
+Backend: ASP.NET Core (.NET 8) <br/>
+Database: Azure SQL using Entity Framework Core <br/>
+Authentication: JWT <br/>
+DevOps: GitHub Actions, Azure App Service <br/>
