@@ -9,7 +9,7 @@ namespace ResumeProject.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class ResumeController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -21,6 +21,7 @@ namespace ResumeProject.API.Controllers
 
         // GET: api/resume
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Resume>>> GetAll()
         {
             return await _context.Resume.ToListAsync();
@@ -28,6 +29,7 @@ namespace ResumeProject.API.Controllers
 
         // GET: api/resume/5
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin,User")]
         public async Task<ActionResult<Resume>> Get(Guid id)
         {
             var resume = await _context.Resume.FindAsync(id);

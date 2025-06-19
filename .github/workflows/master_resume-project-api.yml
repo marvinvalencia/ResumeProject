@@ -5,6 +5,7 @@ name: Build and deploy ASP.Net Core app to Azure Web App - resume-project-api
 
 env:
   JWT_SECRET: ${{ secrets.JWT_SECRET }}  
+  DefaultConnection: ${{ secrets.DefaultConnection }} 
 
 on:
   push:

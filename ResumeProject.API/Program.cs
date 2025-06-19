@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using ResumeProject.Application.Utilities;
+using ResumeProject.Application.Services;
+using ResumeProject.Domain.Entities;
 using ResumeProject.Infrastructure.Data;
+using System;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -43,6 +45,10 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+builder.Services.AddIdentity<User, IdentityRole>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(x =>
     {
@@ -65,16 +71,14 @@ builder.Services.AddDbContext<AppDbContext>(optionsBuilder =>
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await DbInitializer.SeedRolesAsync(services);
+}
+
 app.UseSwagger();
 app.UseSwaggerUI();
-
-app.MapPost("/login", (LoginRequest request, TokenService tokenService) =>
-{
-    return new
-    {
-        access_token = tokenService.GenerateToken(request.Email)
-    };
-});
 
 app.UseHttpsRedirection();
 

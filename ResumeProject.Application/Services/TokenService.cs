@@ -1,36 +1,40 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Logging;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using ResumeProject.Application.Interfaces;
-using System.Data;
+using ResumeProject.Domain.Entities;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Sockets;
 using System.Security.Claims;
-using System.Security.Principal;
 using System.Text;
 
-namespace ResumeProject.Application.Utilities
+namespace ResumeProject.Application.Services
 {
     public class TokenService
     {
-        private readonly string _jwtSecret;
+        private readonly string jwtSecret;
 
         public TokenService(IConfiguration configuration)
         {
-            this._jwtSecret = configuration["JWT_SECRET"] ?? throw new InvalidOperationException("JWT_SECRET not found.");
+            this.jwtSecret = configuration["JWT_SECRET"] ?? throw new InvalidOperationException("JWT_SECRET not found.");
         }
 
-        public string GenerateToken(string email)
+        public string GenerateToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(_jwtSecret);
+
+            if (string.IsNullOrEmpty(this.jwtSecret) || this.jwtSecret.Length < 32)
+            {
+                throw new Exception("JWT secret must be at least 32 characters long");
+            }
+
+            var key = Encoding.UTF8.GetBytes(this.jwtSecret);
 
             var claims = new List<Claim>()
-                {
-                    new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    //new(JwtRegisteredClaimNames.Sub, userId.ToString()),
-                    new(JwtRegisteredClaimNames.Email, email)
-                };
+            {
+                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new(JwtRegisteredClaimNames.Email, user.Email),
+                new(ClaimTypes.Role, user.Role.ToString())
+            };
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
