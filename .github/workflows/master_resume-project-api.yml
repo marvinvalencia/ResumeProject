@@ -33,6 +33,7 @@ jobs:
       - name: dotnet publish
         run: |
             echo "JWT_SECRET=$JWT_SECRET" >> $GITHUB_ENV
+            echo "DefaultConnection=$DefaultConnection" >> $GITHUB_ENV
             dotnet publish ResumeProject.API -c Release -o "${{env.DOTNET_ROOT}}/myapp"
 
       - name: Upload artifact for deployment job
