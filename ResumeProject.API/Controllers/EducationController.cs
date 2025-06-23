@@ -1,93 +1,145 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using ResumeProject.Domain.Entities;
-using ResumeProject.Infrastructure.Data;
+﻿// <copyright file="EducationController.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace ResumeProject.API.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+    using ResumeProject.Domain.Entities;
+    using ResumeProject.Infrastructure.Data;
+
+    /// <summary>
+    /// The EducationController class provides endpoints for managing education records in the application.
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Admin")]
     public class EducationController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly AppDbContext context;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EducationController"/> class.
+        /// </summary>
+        /// <param name="context">The context.</param>
         public EducationController(AppDbContext context)
         {
-            _context = context;
+            this.context = context;
         }
 
-        // GET: api/Education
+        /// <summary>
+        /// The GetAll method retrieves all education records from the database.
+        /// GET: api/Education.
+        /// </summary>
+        /// <returns>The entities.</returns>
         [HttpGet]
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Education>>> GetAll()
         {
-            return await _context.Education.ToListAsync();
+            return await this.context.Education.ToListAsync();
         }
 
-        // GET: api/Education/5
+        /// <summary>
+        /// The Get method retrieves a specific education record by its unique identifier.
+        /// GET: api/Education/5.
+        /// </summary>
+        /// <param name="id">The Id.</param>
+        /// <returns>The entity.</returns>
         [HttpGet("{id}")]
         [Authorize(Roles = "Admin,User")]
         public async Task<ActionResult<Education>> Get(Guid id)
         {
-            var education = await _context.Education.FindAsync(id);
+            var education = await this.context.Education.FindAsync(id);
             if (education == null)
-                return NotFound();
+            {
+                return this.NotFound();
+            }
 
             return education;
         }
 
-        // POST: api/Education
+        /// <summary>
+        /// The Create method adds a new education record to the database.
+        /// POST: api/Education.
+        /// </summary>
+        /// <param name="education">The education.</param>
+        /// <returns>The result.</returns>
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Education>> Create(Education education)
         {
-            _context.Education.Add(education);
-            await _context.SaveChangesAsync();
+            this.context.Education.Add(education);
+            await this.context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(Get), new { id = education.Id }, education);
+            return this.CreatedAtAction(nameof(this.Get), new { id = education.Id }, education);
         }
 
-        // PUT: api/Education/5
+        /// <summary>
+        /// The Update method updates an existing education record in the database.
+        /// PUT: api/Education/5.
+        /// </summary>
+        /// <param name="id">The Id.</param>
+        /// <param name="education">The Education.</param>
+        /// <returns>The result.</returns>
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(Guid id, Education education)
         {
             if (id != education.Id)
-                return BadRequest();
+            {
+                return this.BadRequest();
+            }
 
-            _context.Entry(education).State = EntityState.Modified;
+            this.context.Entry(education).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await this.context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!EducationExists(id))
-                    return NotFound();
+                if (!this.EducationExists(id))
+                {
+                    return this.NotFound();
+                }
                 else
+                {
                     throw;
+                }
             }
 
-            return NoContent();
+            return this.NoContent();
         }
 
-        // DELETE: api/education/5
+        /// <summary>
+        /// The Delete method removes an education record from the database.
+        /// DELETE: api/education/5.
+        /// </summary>
+        /// <param name="id">The Id.</param>
+        /// <returns>The result.</returns>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var education = await _context.Education.FindAsync(id);
+            var education = await this.context.Education.FindAsync(id);
             if (education == null)
-                return NotFound();
+            {
+                return this.NotFound();
+            }
 
-            _context.Education.Remove(education);
-            await _context.SaveChangesAsync();
+            this.context.Education.Remove(education);
+            await this.context.SaveChangesAsync();
 
-            return NoContent();
+            return this.NoContent();
         }
 
+        /// <summary>
+        /// The EducationExists method checks if an education record exists in the database by its unique identifier.
+        /// </summary>
+        /// <param name="id">The Id.</param>
+        /// <returns>The result.</returns>
         private bool EducationExists(Guid id) =>
-            _context.Education.Any(e => e.Id == id);
+            this.context.Education.Any(e => e.Id == id);
     }
 }

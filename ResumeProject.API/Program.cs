@@ -1,3 +1,10 @@
+// <copyright file="Program.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
+#pragma warning disable SA1011, SA1200
+
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -6,18 +13,17 @@ using Microsoft.OpenApi.Models;
 using ResumeProject.Application.Services;
 using ResumeProject.Domain.Entities;
 using ResumeProject.Infrastructure.Data;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
+if (string.IsNullOrWhiteSpace(configuration["JWT_SECRET"]))
+{
+    throw new InvalidOperationException("JWT_SECRET is not configured.");
+}
 
 configuration.AddEnvironmentVariables();
-
-// Add services to the container.
 builder.Services.AddScoped<TokenService>();
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -28,8 +34,9 @@ builder.Services.AddSwaggerGen(options =>
         Name = "Authorization",
         Type = SecuritySchemeType.Http,
         BearerFormat = "JWT",
-        Scheme = "bearer"
+        Scheme = "bearer",
     });
+
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -38,11 +45,11 @@ builder.Services.AddSwaggerGen(options =>
                 Reference = new OpenApiReference
                 {
                     Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
+                    Id = "Bearer",
+                },
             },
-            new List<string>() 
-        }
+            new List<string>()
+        },
     });
 });
 
@@ -61,13 +68,13 @@ builder.Services.AddAuthentication(options =>
     x.RequireHttpsMetadata = false;
     x.TokenValidationParameters = new TokenValidationParameters
     {
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT_SECRET"])),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT_SECRET"]!)),
         ValidIssuer = configuration["JWT_ISSUER"],
         ValidAudience = configuration["JWT_AUDIENCE"],
         ValidateIssuerSigningKey = true,
         ValidateLifetime = true,
         ValidateIssuer = true,
-        ValidateAudience = true
+        ValidateAudience = true,
     };
 });
 
@@ -77,7 +84,6 @@ builder.Services.AddDbContext<AppDbContext>(optionsBuilder =>
 });
 
 var app = builder.Build();
-
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -92,3 +98,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
+
+#pragma warning restore SA1011, SA1200

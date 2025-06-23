@@ -1,93 +1,145 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using ResumeProject.Domain.Entities;
-using ResumeProject.Infrastructure.Data;
+﻿// <copyright file="SkillController.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace ResumeProject.API.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+    using ResumeProject.Domain.Entities;
+    using ResumeProject.Infrastructure.Data;
+
+    /// <summary>
+    /// The SkillController class provides endpoints for managing skills in the application.
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Admin")]
     public class SkillController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly AppDbContext context;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SkillController"/> class.
+        /// </summary>
+        /// <param name="context">The context.</param>
         public SkillController(AppDbContext context)
         {
-            _context = context;
+            this.context = context;
         }
 
-        // GET: api/Skill
+        /// <summary>
+        /// The GetAll method retrieves all skills from the database.
+        /// GET: api/Skill.
+        /// </summary>
+        /// <returns>The entities.</returns>
         [HttpGet]
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Skill>>> GetAll()
         {
-            return await _context.Skill.ToListAsync();
+            return await this.context.Skill.ToListAsync();
         }
 
-        // GET: api/Skill/5
+        /// <summary>
+        /// The Get method retrieves a single skill by its unique identifier.
+        /// GET: api/Skill/5.
+        /// </summary>
+        /// <param name="id">The Id.</param>
+        /// <returns>The entity.</returns>
         [HttpGet("{id}")]
         [Authorize(Roles = "Admin,User")]
         public async Task<ActionResult<Skill>> Get(Guid id)
         {
-            var skill = await _context.Skill.FindAsync(id);
+            var skill = await this.context.Skill.FindAsync(id);
             if (skill == null)
-                return NotFound();
+            {
+                return this.NotFound();
+            }
 
             return skill;
         }
 
-        // POST: api/Skill
+        /// <summary>
+        /// The Create method adds a new skill to the database.
+        /// POST: api/Skill.
+        /// </summary>
+        /// <param name="skill">The skill.</param>
+        /// <returns>The result.</returns>
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Skill>> Create(Skill skill)
         {
-            _context.Skill.Add(skill);
-            await _context.SaveChangesAsync();
+            this.context.Skill.Add(skill);
+            await this.context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(Get), new { id = skill.Id }, skill);
+            return this.CreatedAtAction(nameof(this.Get), new { id = skill.Id }, skill);
         }
 
-        // PUT: api/Skill/5
+        /// <summary>
+        /// The Update method updates an existing skill in the database.
+        /// PUT: api/Skill/5.
+        /// </summary>
+        /// <param name="id">The Id.</param>
+        /// <param name="skill">The skill.</param>
+        /// <returns>The result.</returns>
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(Guid id, Skill skill)
         {
             if (id != skill.Id)
-                return BadRequest();
+            {
+                return this.BadRequest();
+            }
 
-            _context.Entry(skill).State = EntityState.Modified;
+            this.context.Entry(skill).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await this.context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!SkillExists(id))
-                    return NotFound();
+                if (!this.SkillExists(id))
+                {
+                    return this.NotFound();
+                }
                 else
+                {
                     throw;
+                }
             }
 
-            return NoContent();
+            return this.NoContent();
         }
 
-        // DELETE: api/Skill/5
+        /// <summary>
+        /// The Delete method removes a skill from the database.
+        /// DELETE: api/Skill/5.
+        /// </summary>
+        /// <param name="id">The Id.</param>
+        /// <returns>The result.</returns>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var skill = await _context.Skill.FindAsync(id);
+            var skill = await this.context.Skill.FindAsync(id);
             if (skill == null)
-                return NotFound();
+            {
+                return this.NotFound();
+            }
 
-            _context.Skill.Remove(skill);
-            await _context.SaveChangesAsync();
+            this.context.Skill.Remove(skill);
+            await this.context.SaveChangesAsync();
 
-            return NoContent();
+            return this.NoContent();
         }
 
+        /// <summary>
+        /// The SkillExists method checks if a skill with the specified Id exists in the database.
+        /// </summary>
+        /// <param name="id">The Id.</param>
+        /// <returns>The boolean.</returns>
         private bool SkillExists(Guid id) =>
-            _context.Skill.Any(e => e.Id == id);
+            this.context.Skill.Any(e => e.Id == id);
     }
 }

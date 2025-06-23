@@ -1,93 +1,145 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using ResumeProject.Domain.Entities;
-using ResumeProject.Infrastructure.Data;
+﻿// <copyright file="ExperienceController.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace ResumeProject.API.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+    using ResumeProject.Domain.Entities;
+    using ResumeProject.Infrastructure.Data;
+
+    /// <summary>
+    /// The ExperienceController class provides API endpoints for managing user experiences.
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Admin")]
     public class ExperienceController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly AppDbContext context;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExperienceController"/> class.
+        /// </summary>
+        /// <param name="context">The context.</param>
         public ExperienceController(AppDbContext context)
         {
-            _context = context;
+            this.context = context;
         }
 
-        // GET: api/Education
+        /// <summary>
+        /// The GetAll method retrieves all experiences from the database.
+        /// GET: api/Education.
+        /// </summary>
+        /// <returns>The experience entities.</returns>
         [HttpGet]
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Experience>>> GetAll()
         {
-            return await _context.Experience.ToListAsync();
+            return await this.context.Experience.ToListAsync();
         }
 
-        // GET: api/Education/5
+        /// <summary>
+        /// The Get method retrieves a specific experience by its unique identifier.
+        /// GET: api/Education/5.
+        /// </summary>
+        /// <param name="id">The Id.</param>
+        /// <returns>The entity.</returns>
         [HttpGet("{id}")]
         [Authorize(Roles = "Admin,User")]
         public async Task<ActionResult<Experience>> Get(Guid id)
         {
-            var experience = await _context.Experience.FindAsync(id);
+            var experience = await this.context.Experience.FindAsync(id);
             if (experience == null)
-                return NotFound();
+            {
+                return this.NotFound();
+            }
 
             return experience;
         }
 
-        // POST: api/Education
+        /// <summary>
+        /// The Create method adds a new experience to the database.
+        /// POST: api/Education.
+        /// </summary>
+        /// <param name="experience">The experience.</param>
+        /// <returns>The result.</returns>
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Experience>> Create(Experience experience)
         {
-            _context.Experience.Add(experience);
-            await _context.SaveChangesAsync();
+            this.context.Experience.Add(experience);
+            await this.context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(Get), new { id = experience.Id }, experience);
+            return this.CreatedAtAction(nameof(this.Get), new { id = experience.Id }, experience);
         }
 
-        // PUT: api/Education/5
+        /// <summary>
+        /// The Update method updates an existing experience in the database.
+        /// PUT: api/Education/5.
+        /// </summary>
+        /// <param name="id">The Id.</param>
+        /// <param name="experience">The experience.</param>
+        /// <returns>The result.</returns>
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(Guid id, Experience experience)
         {
             if (id != experience.Id)
-                return BadRequest();
+            {
+                return this.BadRequest();
+            }
 
-            _context.Entry(experience).State = EntityState.Modified;
+            this.context.Entry(experience).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await this.context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ExperienceExists(id))
-                    return NotFound();
+                if (!this.ExperienceExists(id))
+                {
+                    return this.NotFound();
+                }
                 else
+                {
                     throw;
+                }
             }
 
-            return NoContent();
+            return this.NoContent();
         }
 
-        // DELETE: api/Education/5
+        /// <summary>
+        /// The Delete method removes an experience from the database.
+        /// DELETE: api/Education/5.
+        /// </summary>
+        /// <param name="id">The Id.</param>
+        /// <returns>The result.</returns>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var experience = await _context.Experience.FindAsync(id);
+            var experience = await this.context.Experience.FindAsync(id);
             if (experience == null)
-                return NotFound();
+            {
+                return this.NotFound();
+            }
 
-            _context.Experience.Remove(experience);
-            await _context.SaveChangesAsync();
+            this.context.Experience.Remove(experience);
+            await this.context.SaveChangesAsync();
 
-            return NoContent();
+            return this.NoContent();
         }
 
+        /// <summary>
+        /// The experience exists method checks if an experience with the specified Id exists in the database.
+        /// </summary>
+        /// <param name="id">The Id.</param>
+        /// <returns>The boolean.</returns>
         private bool ExperienceExists(Guid id) =>
-            _context.Experience.Any(e => e.Id == id);
+            this.context.Experience.Any(e => e.Id == id);
     }
 }

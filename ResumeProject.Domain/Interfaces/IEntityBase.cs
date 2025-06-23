@@ -1,13 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// <copyright file="IEntityBase.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace ResumeProject.Domain.Interfaces
 {
+    /// <summary>
+    /// The IEntityBase interface defines a base entity with a unique identifier.
+    /// </summary>
     public interface IEntityBase
     {
+        /// <summary>
+        /// Gets or sets the unique identifier for the entity.
+        /// </summary>
         Guid Id { get; set; }
     }
 }

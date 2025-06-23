@@ -1,4 +1,10 @@
-﻿using System;
+﻿// <copyright file="20250613022133_add_foreign_keys.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
+#pragma warning disable SA0001, SA1633, SA1300, SA1413, SA1200
+
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -140,3 +146,5 @@ namespace ResumeProject.Infrastructure.Migrations
         }
     }
 }
+
+#pragma warning disable SA0001, SA1633, SA1300, SA1413, SA1200
