@@ -5,6 +5,7 @@ using ResumeProject.Application.DTOs;
 using ResumeProject.Application.Services;
 using ResumeProject.Domain.Entities;
 using ResumeProject.Domain.Enum;
+using System.Data;
 
 namespace ResumeProject.API.Controllers
 {
@@ -14,12 +15,14 @@ namespace ResumeProject.API.Controllers
     public class AuthenticationController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly TokenService _tokenService;
 
-        public AuthenticationController(UserManager<User> userManager, TokenService tokenService)
+        public AuthenticationController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, TokenService tokenService)
         {
             _userManager = userManager;
             _tokenService = tokenService;
+            _roleManager = roleManager;
         }
 
         [HttpPost("login")]
@@ -29,6 +32,7 @@ namespace ResumeProject.API.Controllers
             if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
                 return Unauthorized();
 
+            var userRoles = await _userManager.GetRolesAsync(user);
             var token = _tokenService.GenerateToken(user);
 
             return Ok(new { token });
@@ -55,7 +59,12 @@ namespace ResumeProject.API.Controllers
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
 
-            await _userManager.AddToRoleAsync(user, Role.User.ToString());
+            var role = Role.User.ToString();
+            if (!await _roleManager.RoleExistsAsync(role))
+                await _roleManager.CreateAsync(new IdentityRole(role));
+
+            await _userManager.AddToRoleAsync(user, role);
+
 
             return Ok("User registered successfully.");
         }
