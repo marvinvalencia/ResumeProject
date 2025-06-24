@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using ResumeProject.Application.Common;
 using ResumeProject.Application.Services;
 using ResumeProject.Domain.Entities;
 using ResumeProject.Infrastructure.Data;
@@ -23,6 +24,12 @@ if (string.IsNullOrWhiteSpace(configuration["JWT_SECRET"]))
 
 configuration.AddEnvironmentVariables();
 builder.Services.AddScoped<TokenService>();
+
+builder.Services.AddMediatR(configuration =>
+{
+    configuration.RegisterServicesFromAssemblyContaining<IAssemblyMarker>();
+});
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>

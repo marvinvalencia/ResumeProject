@@ -36,6 +36,7 @@ namespace ResumeProject.API.Controllers
         /// <returns>The entities.</returns>
         [HttpGet]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(IEnumerable<Resume>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Resume>>> GetAll()
         {
             return await this.context.Resume.ToListAsync();
@@ -49,6 +50,7 @@ namespace ResumeProject.API.Controllers
         /// <returns>The entity.</returns>
         [HttpGet("{id}")]
         [Authorize(Roles = "Admin,User")]
+        [ProducesResponseType(typeof(Resume), StatusCodes.Status200OK)]
         public async Task<ActionResult<Resume>> Get(Guid id)
         {
             var resume = await this.context.Resume.FindAsync(id);
@@ -68,6 +70,7 @@ namespace ResumeProject.API.Controllers
         /// <returns>The result.</returns>
         [HttpPost]
         [Authorize(Roles = "Admin")]
+        [ProducesResponseType(typeof(Resume), StatusCodes.Status201Created)]
         public async Task<ActionResult<Resume>> Create(Resume resume)
         {
             this.context.Resume.Add(resume);
@@ -85,6 +88,9 @@ namespace ResumeProject.API.Controllers
         /// <returns>The result.</returns>
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Update(Guid id, Resume resume)
         {
             if (id != resume.Id)
@@ -121,6 +127,8 @@ namespace ResumeProject.API.Controllers
         /// <returns>The result.</returns>
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(Guid id)
         {
             var resume = await this.context.Resume.FindAsync(id);

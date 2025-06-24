@@ -9,6 +9,7 @@ namespace ResumeProject.API.Controllers
     using Microsoft.EntityFrameworkCore;
     using ResumeProject.Domain.Entities;
     using ResumeProject.Infrastructure.Data;
+    using Swashbuckle.AspNetCore.Annotations;
 
     /// <summary>
     /// The EducationController class provides endpoints for managing education records in the application.
@@ -35,6 +36,7 @@ namespace ResumeProject.API.Controllers
         /// <returns>The entities.</returns>
         [HttpGet]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(IEnumerable<Education>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Education>>> GetAll()
         {
             return await this.context.Education.ToListAsync();
@@ -48,6 +50,7 @@ namespace ResumeProject.API.Controllers
         /// <returns>The entity.</returns>
         [HttpGet("{id}")]
         [Authorize(Roles = "Admin,User")]
+        [ProducesResponseType(typeof(Education), StatusCodes.Status200OK)]
         public async Task<ActionResult<Education>> Get(Guid id)
         {
             var education = await this.context.Education.FindAsync(id);
@@ -67,6 +70,7 @@ namespace ResumeProject.API.Controllers
         /// <returns>The result.</returns>
         [HttpPost]
         [Authorize(Roles = "Admin")]
+        [ProducesResponseType(typeof(Education), StatusCodes.Status201Created)]
         public async Task<ActionResult<Education>> Create(Education education)
         {
             this.context.Education.Add(education);
@@ -84,6 +88,9 @@ namespace ResumeProject.API.Controllers
         /// <returns>The result.</returns>
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Update(Guid id, Education education)
         {
             if (id != education.Id)
@@ -120,6 +127,8 @@ namespace ResumeProject.API.Controllers
         /// <returns>The result.</returns>
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(Guid id)
         {
             var education = await this.context.Education.FindAsync(id);

@@ -1,4 +1,4 @@
-﻿// <copyright file="RegisterDto.cs" company="marvinvalencia">
+﻿// <copyright file="LoginRequestDto.cs" company="marvinvalencia">
 // Copyright (c) marvinvalencia. All rights reserved.
 // </copyright>
 
@@ -8,9 +8,9 @@ namespace ResumeProject.Application.DTOs
     using System.ComponentModel.DataAnnotations;
 
     /// <summary>
-    /// The RegisterDto class represents the data transfer object for user registration, containing email, password, and confirm password fields.
+    /// The LoginDto class represents the data transfer object for user login, containing email and password fields.
     /// </summary>
-    public class RegisterDto
+    public class LoginRequestDto
     {
         /// <summary>
         /// Gets or sets the email address of the user.
@@ -25,12 +25,5 @@ namespace ResumeProject.Application.DTOs
         [Required]
         [PasswordPropertyText]
         public string Password { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets the confirmation password for the user, used to ensure the user has entered the password correctly.
-        /// </summary>
-        [Required]
-        [PasswordPropertyText]
-        public string ConfirmPassword { get; set; } = string.Empty;
     }
 }

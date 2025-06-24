@@ -35,6 +35,7 @@ namespace ResumeProject.API.Controllers
         /// <returns>The experience entities.</returns>
         [HttpGet]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(IEnumerable<Experience>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Experience>>> GetAll()
         {
             return await this.context.Experience.ToListAsync();
@@ -48,6 +49,7 @@ namespace ResumeProject.API.Controllers
         /// <returns>The entity.</returns>
         [HttpGet("{id}")]
         [Authorize(Roles = "Admin,User")]
+        [ProducesResponseType(typeof(Experience), StatusCodes.Status200OK)]
         public async Task<ActionResult<Experience>> Get(Guid id)
         {
             var experience = await this.context.Experience.FindAsync(id);
@@ -67,6 +69,7 @@ namespace ResumeProject.API.Controllers
         /// <returns>The result.</returns>
         [HttpPost]
         [Authorize(Roles = "Admin")]
+        [ProducesResponseType(typeof(Experience), StatusCodes.Status201Created)]
         public async Task<ActionResult<Experience>> Create(Experience experience)
         {
             this.context.Experience.Add(experience);
@@ -84,6 +87,9 @@ namespace ResumeProject.API.Controllers
         /// <returns>The result.</returns>
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Update(Guid id, Experience experience)
         {
             if (id != experience.Id)
@@ -120,6 +126,8 @@ namespace ResumeProject.API.Controllers
         /// <returns>The result.</returns>
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(Guid id)
         {
             var experience = await this.context.Experience.FindAsync(id);

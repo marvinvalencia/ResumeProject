@@ -4,16 +4,13 @@
 
 namespace ResumeProject.API.Controllers
 {
-    using System.Data;
     using System.Security.Claims;
+    using MediatR;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using ResumeProject.Application.Commands;
     using ResumeProject.Application.DTOs;
-    using ResumeProject.Application.Services;
-    using ResumeProject.Domain.Entities;
-    using ResumeProject.Domain.Enum;
-    using Swashbuckle.AspNetCore.Annotations;
 
     /// <summary>
     /// The AuthenticationController class handles user authentication and registration operations.
@@ -23,21 +20,15 @@ namespace ResumeProject.API.Controllers
     [AllowAnonymous]
     public class AuthenticationController : ControllerBase
     {
-        private readonly UserManager<User> userManager;
-        private readonly RoleManager<IdentityRole> roleManager;
-        private readonly TokenService tokenService;
+        private readonly IMediator mediator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AuthenticationController"/> class.
         /// </summary>
-        /// <param name="userManager">The user manager.</param>
-        /// <param name="roleManager">The role manager.</param>
-        /// <param name="tokenService">The token service.</param>
-        public AuthenticationController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, TokenService tokenService)
+        /// <param name="mediator">The mediator.</param>
+        public AuthenticationController(IMediator mediator)
         {
-            this.userManager = userManager;
-            this.tokenService = tokenService;
-            this.roleManager = roleManager;
+            this.mediator = mediator;
         }
 
         /// <summary>
@@ -46,67 +37,40 @@ namespace ResumeProject.API.Controllers
         /// <param name="loginDto">The login dto.</param>
         /// <returns>The result.</returns>
         [HttpPost("Login")]
-        [SwaggerResponse(200, "Successfully signed in.", typeof(string))]
-        [SwaggerResponse(401, "Authentication failed.")]
-        public async Task<IActionResult> Login(LoginDto loginDto)
+        [ProducesResponseType(typeof(LoginResponseDto), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Login([FromBody] LoginRequestDto loginDto)
         {
-            var user = await this.userManager.FindByEmailAsync(loginDto.Email);
-            if (user == null || !await this.userManager.CheckPasswordAsync(user, loginDto.Password))
-            {
-                return this.Unauthorized("Login failed.");
-            }
-
-            var userRoles = await this.userManager.GetRolesAsync(user);
-            var token = this.tokenService.GenerateToken(user);
-
-            return this.Ok(new { Message = "Successfully signed in.", Token = token });
+            var result = await this.mediator.Send(new LoginCommand(loginDto.Email, loginDto.Password));
+            return this.Ok(result);
         }
 
         /// <summary>
         /// The Register method registers a new user and assigns them a default role.
         /// </summary>
-        /// <param name="dto">The dto.</param>
+        /// <param name="command">The command.</param>
         /// <returns>The result.</returns>
         [HttpPost("Register")]
-        [SwaggerResponse(200, "User registered successfully.")]
-        [SwaggerResponse(400, "Passwords do not match.")]
-        [SwaggerResponse(400, "User already exists.")]
-        [SwaggerResponse(400, "Error", typeof(IdentityError))]
-        public async Task<IActionResult> Register(RegisterDto dto)
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Register([FromBody] RegisterCommand command)
         {
-            if (dto.Password != dto.ConfirmPassword)
+            try
             {
-                return this.BadRequest("Passwords do not match.");
+                var message = await this.mediator.Send(command);
+                return this.Ok(message);
             }
-
-            var userExists = await this.userManager.FindByEmailAsync(dto.Email);
-            if (userExists != null)
+            catch (ArgumentException ex)
             {
-                return this.BadRequest("User already exists.");
+                return this.BadRequest(ex.Message);
             }
-
-            var user = new User
+            catch (InvalidOperationException ex)
             {
-                Email = dto.Email,
-                UserName = dto.Email,
-            };
-
-            var result = await this.userManager.CreateAsync(user, dto.Password);
-
-            if (!result.Succeeded)
-            {
-                return this.BadRequest(result.Errors);
+                return this.Problem(ex.Message, statusCode: 400);
             }
-
-            var role = Role.User.ToString();
-            if (!await this.roleManager.RoleExistsAsync(role))
+            catch (Exception ex)
             {
-                await this.roleManager.CreateAsync(new IdentityRole(role));
+                return this.StatusCode(500, ex.Message);
             }
-
-            await this.userManager.AddToRoleAsync(user, role);
-
-            return this.Ok("User registered successfully.");
         }
 
         /// <summary>
@@ -116,7 +80,7 @@ namespace ResumeProject.API.Controllers
         /// <returns>The result.</returns>
         [HttpGet("UserClaims")]
         [Authorize]
-        [SwaggerResponse(200, "Claims", typeof(Claim))]
+        [ProducesResponseType(typeof(IEnumerable<Claim>), StatusCodes.Status200OK)]
         public IActionResult UserClaims()
         {
             var allClaims = this.User.Claims

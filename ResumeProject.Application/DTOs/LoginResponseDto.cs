@@ -1,4 +1,4 @@
-﻿// <copyright file="LoginDto.cs" company="marvinvalencia">
+﻿// <copyright file="LoginResponseDto.cs" company="marvinvalencia">
 // Copyright (c) marvinvalencia. All rights reserved.
 // </copyright>
 
@@ -7,16 +7,16 @@ namespace ResumeProject.Application.DTOs
     /// <summary>
     /// The LoginDto class represents the data transfer object for user login, containing email and password fields.
     /// </summary>
-    public class LoginDto
+    public class LoginResponseDto
     {
         /// <summary>
-        /// Gets or sets the email address of the user.
+        /// Gets or sets the status of the login operation.
         /// </summary>
-        public string Email { get; set; } = string.Empty;
+        public string Message { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the password for the user.
+        /// Gets or sets the token for the user.
         /// </summary>
-        public string Password { get; set; } = string.Empty;
+        public string Token { get; set; } = string.Empty;
     }
 }
