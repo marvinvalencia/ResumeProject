@@ -1,5 +1,5 @@
-﻿// <copyright file="LoginDto.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+﻿// <copyright file="LoginDto.cs" company="marvinvalencia">
+// Copyright (c) marvinvalencia. All rights reserved.
 // </copyright>
 
 namespace ResumeProject.Application.DTOs

@@ -1,5 +1,5 @@
-﻿// <copyright file="Experience.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+﻿// <copyright file="Experience.cs" company="marvinvalencia">
+// Copyright (c) marvinvalencia. All rights reserved.
 // </copyright>
 
 namespace ResumeProject.Domain.Entities

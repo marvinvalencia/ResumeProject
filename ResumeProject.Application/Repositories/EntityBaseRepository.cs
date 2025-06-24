@@ -1,5 +1,5 @@
-﻿// <copyright file="EntityBaseRepository.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+﻿// <copyright file="EntityBaseRepository.cs" company="marvinvalencia">
+// Copyright (c) marvinvalencia. All rights reserved.
 // </copyright>
 
 namespace ResumeProject.Application.Repositories

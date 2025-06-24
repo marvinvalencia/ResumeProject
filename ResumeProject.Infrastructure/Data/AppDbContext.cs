@@ -1,5 +1,5 @@
-﻿// <copyright file="AppDbContext.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+﻿// <copyright file="AppDbContext.cs" company="marvinvalencia">
+// Copyright (c) marvinvalencia. All rights reserved.
 // </copyright>
 
 namespace ResumeProject.Infrastructure.Data

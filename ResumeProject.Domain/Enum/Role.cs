@@ -1,5 +1,5 @@
-﻿// <copyright file="Role.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+﻿// <copyright file="Role.cs" company="marvinvalencia">
+// Copyright (c) marvinvalencia. All rights reserved.
 // </copyright>
 
 namespace ResumeProject.Domain.Enum

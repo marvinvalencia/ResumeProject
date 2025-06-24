@@ -1,6 +1,10 @@
-@ResumeProject.API_HostAddress = http://localhost:5216
+@ResumeProject.API_HostAddress = http://localhost:7211
 
-GET {{ResumeProject.API_HostAddress}}/weatherforecast/
+GET {{ResumeProject.API_HostAddress}}/api/Authentication/Login
 Accept: application/json
+{
+  "email": "admin@example.com",
+  "password": "YourPassword123!"
+}
 
 ###

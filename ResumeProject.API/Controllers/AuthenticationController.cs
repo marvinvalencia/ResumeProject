@@ -1,10 +1,11 @@
-﻿// <copyright file="AuthenticationController.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+﻿// <copyright file="AuthenticationController.cs" company="marvinvalencia">
+// Copyright (c) marvinvalencia. All rights reserved.
 // </copyright>
 
 namespace ResumeProject.API.Controllers
 {
     using System.Data;
+    using System.Security.Claims;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,7 @@ namespace ResumeProject.API.Controllers
     using ResumeProject.Application.Services;
     using ResumeProject.Domain.Entities;
     using ResumeProject.Domain.Enum;
+    using Swashbuckle.AspNetCore.Annotations;
 
     /// <summary>
     /// The AuthenticationController class handles user authentication and registration operations.
@@ -43,19 +45,21 @@ namespace ResumeProject.API.Controllers
         /// </summary>
         /// <param name="loginDto">The login dto.</param>
         /// <returns>The result.</returns>
-        [HttpPost("login")]
+        [HttpPost("Login")]
+        [SwaggerResponse(200, "Successfully signed in.", typeof(string))]
+        [SwaggerResponse(401, "Authentication failed.")]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
             var user = await this.userManager.FindByEmailAsync(loginDto.Email);
             if (user == null || !await this.userManager.CheckPasswordAsync(user, loginDto.Password))
             {
-                return this.Unauthorized();
+                return this.Unauthorized("Login failed.");
             }
 
             var userRoles = await this.userManager.GetRolesAsync(user);
             var token = this.tokenService.GenerateToken(user);
 
-            return this.Ok(new { token });
+            return this.Ok(new { Message = "Successfully signed in.", Token = token });
         }
 
         /// <summary>
@@ -63,7 +67,11 @@ namespace ResumeProject.API.Controllers
         /// </summary>
         /// <param name="dto">The dto.</param>
         /// <returns>The result.</returns>
-        [HttpPost("register")]
+        [HttpPost("Register")]
+        [SwaggerResponse(200, "User registered successfully.")]
+        [SwaggerResponse(400, "Passwords do not match.")]
+        [SwaggerResponse(400, "User already exists.")]
+        [SwaggerResponse(400, "Error", typeof(IdentityError))]
         public async Task<IActionResult> Register(RegisterDto dto)
         {
             if (dto.Password != dto.ConfirmPassword)
@@ -108,6 +116,7 @@ namespace ResumeProject.API.Controllers
         /// <returns>The result.</returns>
         [HttpGet("UserClaims")]
         [Authorize]
+        [SwaggerResponse(200, "Claims", typeof(Claim))]
         public IActionResult UserClaims()
         {
             var allClaims = this.User.Claims

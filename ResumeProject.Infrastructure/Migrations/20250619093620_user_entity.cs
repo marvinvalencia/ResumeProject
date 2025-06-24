@@ -1,5 +1,5 @@
-﻿// <copyright file="20250619093620_user_entity.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+﻿// <copyright file="20250619093620_user_entity.cs" company="marvinvalencia">
+// Copyright (c) marvinvalencia. All rights reserved.
 // </copyright>
 
 #pragma warning disable SA0001, SA1633, SA1300, SA1413, SA1200
