@@ -14,6 +14,7 @@ The aim is to build a full-stack web application while applying modern web devel
 ✅ Implement Clean Architecture (Domain, Application, Infrastructure, Web layers) <br/>
 ✅ Use Entity Framework Core for data access <br/>
 ✅ Add basic CRUD operations for resume/profile data <br/>
+✅ Stylecop <br/>
 
 🖥️ Blazor WebAssembly Functionality <br/>
 ✅ Implement routing and navigation (e.g., /home, /projects, /contact) <br/>
@@ -40,7 +41,7 @@ The aim is to build a full-stack web application while applying modern web devel
 🔐 Security & Secrets <br/>
 ✅ Add simple JWT Authentication and Authorization <br/>
 ✅ Store secrets using GitHub Secrets, secure app settings and API keys properly <br/>
-🔲 Show/hide content based on user roles (@attribute [Authorize(Roles = "Admin")]) <br/>
+✅ Show/hide content based on user roles (@attribute [Authorize(Roles = "Admin")]) <br/>
 
 ☁️ Deployment & CI/CD <br/>
 ✅ Deploy REST API (ASP.NET Core) for Resume entities <br/>
