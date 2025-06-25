@@ -2,7 +2,7 @@
 // Copyright (c) marvinvalencia. All rights reserved.
 // </copyright>
 
-namespace ResumeProject.Application.Commands
+namespace ResumeProject.Application.Authentication.Commands
 {
     using MediatR;
     using Microsoft.AspNetCore.Identity;
@@ -64,7 +64,7 @@ namespace ResumeProject.Application.Commands
                 throw new Exception($"User creation failed: {errorMessage}");
             }
 
-            var role = Role.Admin.ToString();
+            var role = Role.User.ToString();
             if (!await this.roleManager.RoleExistsAsync(role))
             {
                 await this.roleManager.CreateAsync(new IdentityRole(role));

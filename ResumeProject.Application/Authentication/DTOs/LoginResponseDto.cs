@@ -2,7 +2,7 @@
 // Copyright (c) marvinvalencia. All rights reserved.
 // </copyright>
 
-namespace ResumeProject.Application.DTOs
+namespace ResumeProject.Application.Authentication.DTOs
 {
     /// <summary>
     /// The LoginDto class represents the data transfer object for user login, containing email and password fields.

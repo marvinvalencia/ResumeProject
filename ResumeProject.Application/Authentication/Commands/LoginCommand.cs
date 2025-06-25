@@ -2,10 +2,10 @@
 // Copyright (c) marvinvalencia. All rights reserved.
 // </copyright>
 
-namespace ResumeProject.Application.Commands
+namespace ResumeProject.Application.Authentication.Commands
 {
     using MediatR;
-    using ResumeProject.Application.DTOs;
+    using ResumeProject.Application.Authentication.DTOs;
 
     /// <summary>
     /// The LoginCommand class represents a command for user login, containing the user's email and password.

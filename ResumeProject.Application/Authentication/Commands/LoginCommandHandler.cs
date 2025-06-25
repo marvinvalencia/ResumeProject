@@ -2,11 +2,11 @@
 // Copyright (c) marvinvalencia. All rights reserved.
 // </copyright>
 
-namespace ResumeProject.Application.Commands
+namespace ResumeProject.Application.Authentication.Commands
 {
     using MediatR;
     using Microsoft.AspNetCore.Identity;
-    using ResumeProject.Application.DTOs;
+    using ResumeProject.Application.Authentication.DTOs;
     using ResumeProject.Application.Services;
     using ResumeProject.Domain.Entities;
 

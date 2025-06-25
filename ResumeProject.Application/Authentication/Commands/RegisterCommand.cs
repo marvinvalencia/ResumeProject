@@ -2,7 +2,7 @@
 // Copyright (c) marvinvalencia. All rights reserved.
 // </copyright>
 
-namespace ResumeProject.Application.Commands
+namespace ResumeProject.Application.Authentication.Commands
 {
     using MediatR;
 

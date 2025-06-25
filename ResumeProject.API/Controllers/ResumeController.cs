@@ -4,11 +4,13 @@
 
 namespace ResumeProject.API.Controllers
 {
+    using MediatR;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
+    using ResumeProject.Application.Experience.Queries;
+    using ResumeProject.Application.Resume.Commands;
+    using ResumeProject.Application.Resume.Queries;
     using ResumeProject.Domain.Entities;
-    using ResumeProject.Infrastructure.Data;
 
     /// <summary>
     /// The ResumeController class provides endpoints for managing resumes in the application.
@@ -18,15 +20,15 @@ namespace ResumeProject.API.Controllers
     [Authorize(Roles = "Admin")]
     public class ResumeController : ControllerBase
     {
-        private readonly AppDbContext context;
+        private readonly IMediator mediator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResumeController"/> class.
         /// </summary>
-        /// <param name="context">The context.</param>
-        public ResumeController(AppDbContext context)
+        /// <param name="mediator">The mediator.</param>
+        public ResumeController(IMediator mediator)
         {
-            this.context = context;
+            this.mediator = mediator;
         }
 
         /// <summary>
@@ -39,7 +41,8 @@ namespace ResumeProject.API.Controllers
         [ProducesResponseType(typeof(IEnumerable<Resume>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Resume>>> GetAll()
         {
-            return await this.context.Resume.ToListAsync();
+            var result = await this.mediator.Send(new GetAllResumeQuery());
+            return this.Ok(result);
         }
 
         /// <summary>
@@ -51,31 +54,31 @@ namespace ResumeProject.API.Controllers
         [HttpGet("{id}")]
         [Authorize(Roles = "Admin,User")]
         [ProducesResponseType(typeof(Resume), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Resume>> Get(Guid id)
         {
-            var resume = await this.context.Resume.FindAsync(id);
+            var resume = await this.mediator.Send(new GetResumeByIdQuery(id));
+
             if (resume == null)
             {
                 return this.NotFound();
             }
 
-            return resume;
+            return this.Ok(resume);
         }
 
         /// <summary>
         /// The Create method adds a new resume to the database.
         /// POST: api/resume.
         /// </summary>
-        /// <param name="resume">The resume.</param>
+        /// <param name="command">The command.</param>
         /// <returns>The result.</returns>
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(Resume), StatusCodes.Status201Created)]
-        public async Task<ActionResult<Resume>> Create(Resume resume)
+        public async Task<IActionResult> Create(CreateResumeCommand command)
         {
-            this.context.Resume.Add(resume);
-            await this.context.SaveChangesAsync();
-
+            var resume = await this.mediator.Send(command);
             return this.CreatedAtAction(nameof(this.Get), new { id = resume.Id }, resume);
         }
 
@@ -84,36 +87,27 @@ namespace ResumeProject.API.Controllers
         /// PUT: api/resume/5.
         /// </summary>
         /// <param name="id">The Id.</param>
-        /// <param name="resume">The resume.</param>
+        /// <param name="command">The command.</param>
         /// <returns>The result.</returns>
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Update(Guid id, Resume resume)
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateResumeCommand command)
         {
-            if (id != resume.Id)
+            if (id != command.Id)
             {
-                return this.BadRequest();
+                return this.BadRequest("Mismatched Experience ID.");
             }
-
-            this.context.Entry(resume).State = EntityState.Modified;
 
             try
             {
-                await this.context.SaveChangesAsync();
+                await this.mediator.Send(command);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (KeyNotFoundException)
             {
-                if (!this.ResumeExists(id))
-                {
-                    return this.NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return this.NotFound();
             }
 
             return this.NoContent();
@@ -131,24 +125,15 @@ namespace ResumeProject.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var resume = await this.context.Resume.FindAsync(id);
-            if (resume == null)
+            try
+            {
+                await this.mediator.Send(new DeleteResumeCommand(id));
+                return this.NoContent();
+            }
+            catch (KeyNotFoundException)
             {
                 return this.NotFound();
             }
-
-            this.context.Resume.Remove(resume);
-            await this.context.SaveChangesAsync();
-
-            return this.NoContent();
         }
-
-        /// <summary>
-        /// The ResumeExists method checks if a resume with the specified Id exists in the database.
-        /// </summary>
-        /// <param name="id">The Id.</param>
-        /// <returns>The boolean.</returns>
-        private bool ResumeExists(Guid id) =>
-            this.context.Resume.Any(e => e.Id == id);
     }
 }

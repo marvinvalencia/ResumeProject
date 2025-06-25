@@ -7,10 +7,9 @@ namespace ResumeProject.API.Controllers
     using System.Security.Claims;
     using MediatR;
     using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using ResumeProject.Application.Commands;
-    using ResumeProject.Application.DTOs;
+    using ResumeProject.Application.Authentication.Commands;
+    using ResumeProject.Application.Authentication.DTOs;
 
     /// <summary>
     /// The AuthenticationController class handles user authentication and registration operations.

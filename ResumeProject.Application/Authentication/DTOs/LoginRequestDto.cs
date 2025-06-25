@@ -2,7 +2,7 @@
 // Copyright (c) marvinvalencia. All rights reserved.
 // </copyright>
 
-namespace ResumeProject.Application.DTOs
+namespace ResumeProject.Application.Authentication.DTOs
 {
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;

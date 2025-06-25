@@ -49,6 +49,11 @@ namespace ResumeProject.Domain.Entities
         public string Major { get; set; } = string.Empty;
 
         /// <summary>
+        /// Gets or sets the description of the education.
+        /// </summary>
+        public string Description { get; set; } = string.Empty;
+
+        /// <summary>
         /// Gets or sets the GPA (Grade Point Average).
         /// </summary>
         public double GPA { get; set; }

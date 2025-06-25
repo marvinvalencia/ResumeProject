@@ -2,8 +2,6 @@
 // Copyright (c) marvinvalencia. All rights reserved.
 // </copyright>
 
-#pragma warning disable SA0001, SA1633, SA1300, SA1413, SA1200
-
 using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
@@ -132,5 +130,3 @@ namespace ResumeProject.Infrastructure.Migrations
         }
     }
 }
-
-#pragma warning disable SA0001, SA1633, SA1300, SA1413, SA1200

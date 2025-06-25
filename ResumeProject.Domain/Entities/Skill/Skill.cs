@@ -29,14 +29,14 @@ namespace ResumeProject.Domain.Entities
         public string Name { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the description of the skill, providing additional context or details.
+        /// Gets or sets the proficiency of the skill.
         /// </summary>
-        public string Description { get; set; } = string.Empty;
+        public int Proficiency { get; set; }
 
         /// <summary>
-        /// Gets or sets the proficiency level of the skill.
+        /// Gets or sets the number of years of experience with this skill.
         /// </summary>
-        public int ProficiencyLevel { get; set; }
+        public int YearsOfExperience { get; set; }
 
         /// <summary>
         /// Gets or sets the resume this skill belongs to.

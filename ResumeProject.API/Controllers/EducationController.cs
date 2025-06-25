@@ -4,12 +4,12 @@
 
 namespace ResumeProject.API.Controllers
 {
+    using MediatR;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
+    using ResumeProject.Application.Education.Commands;
+    using ResumeProject.Application.Education.Queries;
     using ResumeProject.Domain.Entities;
-    using ResumeProject.Infrastructure.Data;
-    using Swashbuckle.AspNetCore.Annotations;
 
     /// <summary>
     /// The EducationController class provides endpoints for managing education records in the application.
@@ -18,15 +18,15 @@ namespace ResumeProject.API.Controllers
     [Route("api/[controller]")]
     public class EducationController : ControllerBase
     {
-        private readonly AppDbContext context;
+        private readonly IMediator mediator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EducationController"/> class.
         /// </summary>
-        /// <param name="context">The context.</param>
-        public EducationController(AppDbContext context)
+        /// <param name="mediator">The mediator.</param>
+        public EducationController(IMediator mediator)
         {
-            this.context = context;
+            this.mediator = mediator;
         }
 
         /// <summary>
@@ -39,7 +39,8 @@ namespace ResumeProject.API.Controllers
         [ProducesResponseType(typeof(IEnumerable<Education>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Education>>> GetAll()
         {
-            return await this.context.Education.ToListAsync();
+            var result = await this.mediator.Send(new GetAllEducationQuery());
+            return this.Ok(result);
         }
 
         /// <summary>
@@ -51,32 +52,33 @@ namespace ResumeProject.API.Controllers
         [HttpGet("{id}")]
         [Authorize(Roles = "Admin,User")]
         [ProducesResponseType(typeof(Education), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Education>> Get(Guid id)
         {
-            var education = await this.context.Education.FindAsync(id);
+            var education = await this.mediator.Send(new GetEducationByIdQuery(id));
+
             if (education == null)
             {
                 return this.NotFound();
             }
 
-            return education;
+            return this.Ok(education);
         }
 
         /// <summary>
         /// The Create method adds a new education record to the database.
         /// POST: api/Education.
         /// </summary>
-        /// <param name="education">The education.</param>
+        /// <param name="command">The command.</param>
         /// <returns>The result.</returns>
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(Education), StatusCodes.Status201Created)]
-        public async Task<ActionResult<Education>> Create(Education education)
+        public async Task<IActionResult> Create([FromBody] CreateEducationCommand command)
         {
-            this.context.Education.Add(education);
-            await this.context.SaveChangesAsync();
+            var createdEducation = await this.mediator.Send(command);
 
-            return this.CreatedAtAction(nameof(this.Get), new { id = education.Id }, education);
+            return this.CreatedAtAction(nameof(this.Get), new { id = createdEducation.Id }, createdEducation);
         }
 
         /// <summary>
@@ -84,36 +86,27 @@ namespace ResumeProject.API.Controllers
         /// PUT: api/Education/5.
         /// </summary>
         /// <param name="id">The Id.</param>
-        /// <param name="education">The Education.</param>
+        /// <param name="command">The command.</param>
         /// <returns>The result.</returns>
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Update(Guid id, Education education)
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateEducationCommand command)
         {
-            if (id != education.Id)
+            if (id != command.Id)
             {
-                return this.BadRequest();
+                return this.BadRequest("Mismatched Education ID.");
             }
-
-            this.context.Entry(education).State = EntityState.Modified;
 
             try
             {
-                await this.context.SaveChangesAsync();
+                await this.mediator.Send(command);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (KeyNotFoundException)
             {
-                if (!this.EducationExists(id))
-                {
-                    return this.NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return this.NotFound();
             }
 
             return this.NoContent();
@@ -131,24 +124,15 @@ namespace ResumeProject.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var education = await this.context.Education.FindAsync(id);
-            if (education == null)
+            try
+            {
+                await this.mediator.Send(new DeleteEducationCommand(id));
+                return this.NoContent();
+            }
+            catch (KeyNotFoundException)
             {
                 return this.NotFound();
             }
-
-            this.context.Education.Remove(education);
-            await this.context.SaveChangesAsync();
-
-            return this.NoContent();
         }
-
-        /// <summary>
-        /// The EducationExists method checks if an education record exists in the database by its unique identifier.
-        /// </summary>
-        /// <param name="id">The Id.</param>
-        /// <returns>The result.</returns>
-        private bool EducationExists(Guid id) =>
-            this.context.Education.Any(e => e.Id == id);
     }
 }

@@ -4,11 +4,15 @@
 
 namespace ResumeProject.API.Controllers
 {
+    using MediatR;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    using ResumeProject.Application.Experience.Queries;
+    using ResumeProject.Application.Resume.Commands;
+    using ResumeProject.Application.Skill.Commands;
+    using ResumeProject.Application.Skill.Queries;
     using ResumeProject.Domain.Entities;
-    using ResumeProject.Infrastructure.Data;
 
     /// <summary>
     /// The SkillController class provides endpoints for managing skills in the application.
@@ -17,15 +21,15 @@ namespace ResumeProject.API.Controllers
     [Route("api/[controller]")]
     public class SkillController : ControllerBase
     {
-        private readonly AppDbContext context;
+        private readonly IMediator mediator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SkillController"/> class.
         /// </summary>
-        /// <param name="context">The context.</param>
-        public SkillController(AppDbContext context)
+        /// <param name="mediator">The mediator.</param>
+        public SkillController(IMediator mediator)
         {
-            this.context = context;
+            this.mediator = mediator;
         }
 
         /// <summary>
@@ -38,7 +42,8 @@ namespace ResumeProject.API.Controllers
         [ProducesResponseType(typeof(IEnumerable<Skill>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Skill>>> GetAll()
         {
-            return await this.context.Skill.ToListAsync();
+            var result = await this.mediator.Send(new GetAllSkillQuery());
+            return this.Ok(result);
         }
 
         /// <summary>
@@ -50,31 +55,31 @@ namespace ResumeProject.API.Controllers
         [HttpGet("{id}")]
         [Authorize(Roles = "Admin,User")]
         [ProducesResponseType(typeof(Skill), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Skill>> Get(Guid id)
         {
-            var skill = await this.context.Skill.FindAsync(id);
-            if (skill == null)
+            var resume = await this.mediator.Send(new GetSkillByIdQuery(id));
+
+            if (resume == null)
             {
                 return this.NotFound();
             }
 
-            return skill;
+            return this.Ok(resume);
         }
 
         /// <summary>
         /// The Create method adds a new skill to the database.
         /// POST: api/Skill.
         /// </summary>
-        /// <param name="skill">The skill.</param>
+        /// <param name="command">The command.</param>
         /// <returns>The result.</returns>
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(Skill), StatusCodes.Status201Created)]
-        public async Task<ActionResult<Skill>> Create(Skill skill)
+        public async Task<IActionResult> Create(CreateSkillCommand command)
         {
-            this.context.Skill.Add(skill);
-            await this.context.SaveChangesAsync();
-
+            var skill = await this.mediator.Send(command);
             return this.CreatedAtAction(nameof(this.Get), new { id = skill.Id }, skill);
         }
 
@@ -83,36 +88,27 @@ namespace ResumeProject.API.Controllers
         /// PUT: api/Skill/5.
         /// </summary>
         /// <param name="id">The Id.</param>
-        /// <param name="skill">The skill.</param>
+        /// <param name="command">The command.</param>
         /// <returns>The result.</returns>
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Update(Guid id, Skill skill)
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateSkillCommand command)
         {
-            if (id != skill.Id)
+            if (id != command.Id)
             {
-                return this.BadRequest();
+                return this.BadRequest("Mismatched Experience ID.");
             }
-
-            this.context.Entry(skill).State = EntityState.Modified;
 
             try
             {
-                await this.context.SaveChangesAsync();
+                await this.mediator.Send(command);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (KeyNotFoundException)
             {
-                if (!this.SkillExists(id))
-                {
-                    return this.NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return this.NotFound();
             }
 
             return this.NoContent();
@@ -130,24 +126,15 @@ namespace ResumeProject.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var skill = await this.context.Skill.FindAsync(id);
-            if (skill == null)
+            try
+            {
+                await this.mediator.Send(new DeleteSkillCommand(id));
+                return this.NoContent();
+            }
+            catch (KeyNotFoundException)
             {
                 return this.NotFound();
             }
-
-            this.context.Skill.Remove(skill);
-            await this.context.SaveChangesAsync();
-
-            return this.NoContent();
         }
-
-        /// <summary>
-        /// The SkillExists method checks if a skill with the specified Id exists in the database.
-        /// </summary>
-        /// <param name="id">The Id.</param>
-        /// <returns>The boolean.</returns>
-        private bool SkillExists(Guid id) =>
-            this.context.Skill.Any(e => e.Id == id);
     }
 }

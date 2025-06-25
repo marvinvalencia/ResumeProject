@@ -4,11 +4,12 @@
 
 namespace ResumeProject.API.Controllers
 {
+    using MediatR;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
+    using ResumeProject.Application.Experience.Commands;
+    using ResumeProject.Application.Experience.Queries;
     using ResumeProject.Domain.Entities;
-    using ResumeProject.Infrastructure.Data;
 
     /// <summary>
     /// The ExperienceController class provides API endpoints for managing user experiences.
@@ -17,20 +18,20 @@ namespace ResumeProject.API.Controllers
     [Route("api/[controller]")]
     public class ExperienceController : ControllerBase
     {
-        private readonly AppDbContext context;
+        private readonly IMediator mediator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExperienceController"/> class.
         /// </summary>
-        /// <param name="context">The context.</param>
-        public ExperienceController(AppDbContext context)
+        /// <param name="mediator">The mediator.</param>
+        public ExperienceController(IMediator mediator)
         {
-            this.context = context;
+            this.mediator = mediator;
         }
 
         /// <summary>
         /// The GetAll method retrieves all experiences from the database.
-        /// GET: api/Education.
+        /// GET: api/Experience.
         /// </summary>
         /// <returns>The experience entities.</returns>
         [HttpGet]
@@ -38,44 +39,46 @@ namespace ResumeProject.API.Controllers
         [ProducesResponseType(typeof(IEnumerable<Experience>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Experience>>> GetAll()
         {
-            return await this.context.Experience.ToListAsync();
+            var result = await this.mediator.Send(new GetAllExperienceQuery());
+            return this.Ok(result);
         }
 
         /// <summary>
         /// The Get method retrieves a specific experience by its unique identifier.
-        /// GET: api/Education/5.
+        /// GET: api/Experience/5.
         /// </summary>
         /// <param name="id">The Id.</param>
         /// <returns>The entity.</returns>
         [HttpGet("{id}")]
         [Authorize(Roles = "Admin,User")]
         [ProducesResponseType(typeof(Experience), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Experience>> Get(Guid id)
         {
-            var experience = await this.context.Experience.FindAsync(id);
+            var experience = await this.mediator.Send(new GetExperienceByIdQuery(id));
+
             if (experience == null)
             {
                 return this.NotFound();
             }
 
-            return experience;
+            return this.Ok(experience);
         }
 
         /// <summary>
         /// The Create method adds a new experience to the database.
         /// POST: api/Education.
         /// </summary>
-        /// <param name="experience">The experience.</param>
+        /// <param name="command">The command.</param>
         /// <returns>The result.</returns>
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(Experience), StatusCodes.Status201Created)]
-        public async Task<ActionResult<Experience>> Create(Experience experience)
+        public async Task<ActionResult<Experience>> Create([FromBody] CreateExperienceCommand command)
         {
-            this.context.Experience.Add(experience);
-            await this.context.SaveChangesAsync();
+            var result = await this.mediator.Send(command);
 
-            return this.CreatedAtAction(nameof(this.Get), new { id = experience.Id }, experience);
+            return this.CreatedAtAction(nameof(this.Get), new { id = result.Id }, result);
         }
 
         /// <summary>
@@ -83,36 +86,27 @@ namespace ResumeProject.API.Controllers
         /// PUT: api/Education/5.
         /// </summary>
         /// <param name="id">The Id.</param>
-        /// <param name="experience">The experience.</param>
+        /// <param name="command">The command.</param>
         /// <returns>The result.</returns>
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Update(Guid id, Experience experience)
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateExperienceCommand command)
         {
-            if (id != experience.Id)
+            if (id != command.Id)
             {
-                return this.BadRequest();
+                return this.BadRequest("Mismatched Experience ID.");
             }
-
-            this.context.Entry(experience).State = EntityState.Modified;
 
             try
             {
-                await this.context.SaveChangesAsync();
+                await this.mediator.Send(command);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (KeyNotFoundException)
             {
-                if (!this.ExperienceExists(id))
-                {
-                    return this.NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return this.NotFound();
             }
 
             return this.NoContent();
@@ -130,24 +124,15 @@ namespace ResumeProject.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var experience = await this.context.Experience.FindAsync(id);
-            if (experience == null)
+            try
+            {
+                await this.mediator.Send(new DeleteExperienceCommand(id));
+                return this.NoContent();
+            }
+            catch (KeyNotFoundException)
             {
                 return this.NotFound();
             }
-
-            this.context.Experience.Remove(experience);
-            await this.context.SaveChangesAsync();
-
-            return this.NoContent();
         }
-
-        /// <summary>
-        /// The experience exists method checks if an experience with the specified Id exists in the database.
-        /// </summary>
-        /// <param name="id">The Id.</param>
-        /// <returns>The boolean.</returns>
-        private bool ExperienceExists(Guid id) =>
-            this.context.Experience.Any(e => e.Id == id);
     }
 }

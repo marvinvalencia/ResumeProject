@@ -39,6 +39,11 @@ namespace ResumeProject.Domain.Entities
         public string PhoneNumber { get; set; } = string.Empty;
 
         /// <summary>
+        /// Gets or sets the address of the individual.
+        /// </summary>
+        public string Address { get; set; } = string.Empty;
+
+        /// <summary>
         /// Gets or sets the summary or objective statement of the resume.
         /// </summary>
         public string Summary { get; set; } = string.Empty;
