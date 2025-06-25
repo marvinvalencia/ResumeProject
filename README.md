@@ -15,6 +15,7 @@ The aim is to build a full-stack web application while applying modern web devel
 ✅ Use Entity Framework Core for data access <br/>
 ✅ Add basic CRUD operations for resume/profile data <br/>
 ✅ Stylecop <br/>
+✅ Use MediatR for CQRS pattern and separation of concerns <br/>
 
 🖥️ Blazor WebAssembly Functionality <br/>
 ✅ Implement routing and navigation (e.g., /home, /projects, /contact) <br/>
