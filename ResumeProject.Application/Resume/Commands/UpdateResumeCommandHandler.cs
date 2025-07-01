@@ -41,12 +41,9 @@ namespace ResumeProject.Application.Resume.Commands
                 throw new KeyNotFoundException("Resume not found.");
             }
 
-            if (request.FirstName != null && request.LastName != null)
-            {
-                resume.Name = string.Format("{0} {1}", request.FirstName, request.LastName);
-            }
-
             resume.Id = request.Id;
+            resume.FirstName = request.FirstName ?? resume.FirstName;
+            resume.LastName = request.LastName ?? resume.LastName;
             resume.Picture = request.Picture ?? resume.Picture;
             resume.Email = request.Email ?? resume.Email;
             resume.PhoneNumber = request.PhoneNumber ?? resume.PhoneNumber;

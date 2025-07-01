@@ -5,6 +5,7 @@
 namespace ResumeProject.Application.Resume.Queries
 {
     using MediatR;
+    using Microsoft.EntityFrameworkCore;
     using ResumeProject.Domain.Entities;
     using ResumeProject.Infrastructure.Data;
 
@@ -32,7 +33,12 @@ namespace ResumeProject.Application.Resume.Queries
         /// <returns>The resume entity.</returns>
         public async Task<Resume?> Handle(GetResumeByIdQuery request, CancellationToken cancellationToken)
         {
-            return await this.context.Resume.FindAsync(new object[] { request.Id }, cancellationToken);
+            return await this.context.Resume
+                    .Include(r => r.Experiences)
+                    .Include(r => r.Educations)
+                    .Include(r => r.Skills)
+                    .Include(r => r.Links)
+                    .FirstOrDefaultAsync(r => r.Id == request.Id, cancellationToken);
         }
     }
 }

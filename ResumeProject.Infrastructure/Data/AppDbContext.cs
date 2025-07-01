@@ -43,6 +43,11 @@ namespace ResumeProject.Infrastructure.Data
         public DbSet<Skill> Skill { get; set; }
 
         /// <summary>
+        /// Gets or sets the DbSet for Link entities.
+        /// </summary>
+        public DbSet<Link> Link { get; set; }
+
+        /// <summary>
         /// Gets or sets the DbSet for User entities.
         /// </summary>
         public DbSet<User> User { get; set; }
@@ -91,6 +96,11 @@ namespace ResumeProject.Infrastructure.Data
                     .WithOne(s => s.Resume)
                     .HasForeignKey(s => s.ResumeId)
                     .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasMany(r => r.Links)
+                    .WithOne(l => l.Resume)
+                    .HasForeignKey(l => l.ResumeId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<Experience>(entity =>
@@ -122,6 +132,14 @@ namespace ResumeProject.Infrastructure.Data
                 entity.HasKey(u => u.Id);
 
                 entity.Property(u => u.Id)
+                      .HasDefaultValueSql("NEWID()");
+            });
+
+            modelBuilder.Entity<Link>(entity =>
+            {
+                entity.HasKey(l => l.Id);
+
+                entity.Property(l => l.Id)
                       .HasDefaultValueSql("NEWID()");
             });
         }

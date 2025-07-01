@@ -40,6 +40,7 @@ namespace ResumeProject.Application.Resume.Queries
                     .Include(r => r.Experiences)
                     .Include(r => r.Educations)
                     .Include(r => r.Skills)
+                    .Include(r => r.Links)
                     .ToListAsync(cancellationToken);
         }
     }

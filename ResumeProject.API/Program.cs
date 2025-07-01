@@ -94,6 +94,16 @@ builder.Services.AddDbContext<AppDbContext>(optionsBuilder =>
     optionsBuilder.UseAzureSql(builder.Configuration["DefaultConnection"]);
 });
 
+var allowedOrigins = builder.Configuration.GetSection("CorsSettings:AllowedOrigins").Get<string[]>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+            "AllowBlazorApp",
+            builder => builder.WithOrigins(allowedOrigins!)
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+});
+
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
@@ -103,6 +113,8 @@ using (var scope = app.Services.CreateScope())
 
 app.UseSwagger();
 app.UseSwaggerUI();
+
+app.UseCors("AllowBlazorApp");
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

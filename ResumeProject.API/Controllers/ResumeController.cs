@@ -52,7 +52,7 @@ namespace ResumeProject.API.Controllers
         /// <param name="id">The Id.</param>
         /// <returns>The entity.</returns>
         [HttpGet("{id}")]
-        [Authorize(Roles = "Admin,User")]
+        [AllowAnonymous]
         [ProducesResponseType(typeof(Resume), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Resume>> Get(Guid id)

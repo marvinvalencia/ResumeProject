@@ -5,6 +5,7 @@
 namespace ResumeProject.Blazor
 {
     using ResumeProject.Blazor.Components;
+    using ResumeProject.Blazor.Services;
 
     /// <summary>
     /// The Program class is the entry point for the Blazor application.
@@ -18,10 +19,18 @@ namespace ResumeProject.Blazor
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var baseUrl = builder.Configuration["ApiSettings:BaseUrl"];
 
             // Add services to the container.
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
+
+            builder.Services.AddScoped(sp => new HttpClient
+            {
+                BaseAddress = new Uri(baseUrl!),
+            });
+
+            builder.Services.AddScoped<ResumeService>();
 
             var app = builder.Build();
 

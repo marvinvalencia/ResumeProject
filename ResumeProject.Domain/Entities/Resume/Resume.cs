@@ -24,9 +24,14 @@ namespace ResumeProject.Domain.Entities
         public byte[] Picture { get; set; } = null!;
 
         /// <summary>
-        /// Gets or sets the name of the individual.
+        /// Gets or sets the first name of the individual.
         /// </summary>
-        public string Name { get; set; } = string.Empty;
+        public string FirstName { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the last name of the individual.
+        /// </summary>
+        public string LastName { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the email address of the individual.
@@ -62,6 +67,11 @@ namespace ResumeProject.Domain.Entities
         /// Gets or sets the collection of educations associated with the resume.
         /// </summary>
         public ICollection<Education> Educations { get; set; } = new List<Education>();
+
+        /// <summary>
+        /// Gets or sets the collection of links associated with the resume, such as social media profiles or personal websites.
+        /// </summary>
+        public ICollection<Link> Links { get; set; } = new List<Link>();
 
         /// <summary>
         /// Gets or sets the interests or hobbies of the individual.

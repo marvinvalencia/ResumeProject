@@ -37,7 +37,8 @@ namespace ResumeProject.Application.Resume.Commands
             var resume = new Resume
             {
                 Picture = request.Picture,
-                Name = request.FirstName + " " + request.LastName,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
                 Email = request.Email,
                 PhoneNumber = request.PhoneNumber,
                 Address = request.Address,
