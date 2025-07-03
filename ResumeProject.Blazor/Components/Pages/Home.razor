@@ -1,10 +1,17 @@
 ﻿@page "/"
+@using ResumeProject.Blazor.Services
+@using ResumeProject.Domain.Entities
+@inject ResumeService ResumeService
 
 <PageTitle>Home</PageTitle>
 
 <div class="container-fluid p-0">
+    @if (ResumeService.ErrorMessage != null)
+    {
+        @ResumeService.ErrorMessage
+    }
     @* <input @bind="userName" /> *@
-    <p>Hello, Guest!</p>
+    @* <p>Hello, Guest!</p> *@
     <!-- About-->
     <section class="resume-section" id="about">
         <About />
@@ -34,6 +41,11 @@
 
 
 @code {
+    private Resume? resume;
 
+    protected override async Task OnInitializedAsync()
+    {
+        resume = await ResumeService.GetResumeAsync(new Guid("883fe71e-c318-40d5-b00a-be1b129fb0c1"));
+    }
 }
 

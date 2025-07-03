@@ -4,8 +4,37 @@
 @inject ResumeService ResumeService
 
 <PageTitle>About</PageTitle>
- 
-@if (resume == null)
+
+@if (ResumeService.ErrorMessage != null)
+{
+    <section class="resume-section" id="about">
+        <div class="container-fluid p-0">
+            <div class="resume-section-content">
+                <h1 class="mb-0">
+                    Jan Marvin
+                    <span class="text-primary">Valencia</span>
+                </h1>
+                <div class="subheading mb-5">
+                    Metro Manila, Philippines · (+63) 9152569208 ·
+                    <a href="mailto:jmarvinvalencia@gmail.com">jmarvinvalencia@gmail.com</a>
+                </div>
+                <p class="lead mb-5">
+                    I am a Software Developer with 11 years of experience. My main tech stacks are primarily .NET focused.
+                    I'm proficient in C#, SQL Server and .NET Technologies. I have always been a problem solver.
+                    I was usually a DEV Support and was on call frequently in which I gained a lot of experience with client issues.
+                    Resolved numerous bugs and implemented various workarounds, providing thorough investigations and detailed analyses for each issue.
+                    I worked previously with legacy codes but I'm a fast learner and can definitely adapt to new technologies as well.
+                </p>
+                <div class="social-icons">
+                    <a class="social-icon" href="https://www.linkedin.com/in/marvinvalencia/"><i class="fab fa-linkedin-in"></i></a>
+                    <a class="social-icon" href="https://github.com/marvinvalencia"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <hr class="m-0" />
+}
+else if (ResumeService.Resume == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -15,18 +44,18 @@ else
         <div class="container-fluid p-0">
             <div class="resume-section-content">
                 <h1 class="mb-0">
-                    @resume.FirstName
-                    <span class="text-primary">@resume.LastName</span>
+                    @ResumeService.Resume.FirstName
+                    <span class="text-primary">@ResumeService.Resume.LastName</span>
                 </h1>
                 <div class="subheading mb-5">
-                    @resume.Address · @resume.PhoneNumber ·
-                    <a href="mailto:@resume.Email">@resume.Email</a>
+                    @ResumeService.Resume.Address · @ResumeService.Resume.PhoneNumber ·
+                    <a href="mailto:@ResumeService.Resume.Email">@ResumeService.Resume.Email</a>
                 </div>
                 <p class="lead mb-5">
-                    @resume.Summary
+                    @ResumeService.Resume.Summary
                 </p>
                 <div class="social-icons">
-                    @foreach (var social in resume.Links)
+                    @foreach (var social in ResumeService.Resume.Links)
                     {
                         string iconClass = "";
                         switch (social.Name)
@@ -49,10 +78,5 @@ else
 }
 
 @code {
-    private Resume? resume;
 
-    protected override async Task OnInitializedAsync()
-    {
-        resume = await ResumeService.GetResumeAsync(new Guid("883fe71e-c318-40d5-b00a-be1b129fb0c1"));
-    }
 }
