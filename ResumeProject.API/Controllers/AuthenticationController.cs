@@ -20,14 +20,17 @@ namespace ResumeProject.API.Controllers
     public class AuthenticationController : BaseApiController
     {
         private readonly IMediator mediator;
+        private readonly ILogger<AuthenticationController> logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AuthenticationController"/> class.
         /// </summary>
         /// <param name="mediator">The mediator.</param>
-        public AuthenticationController(IMediator mediator)
+        /// <param name="logger">The logger.</param>
+        public AuthenticationController(IMediator mediator, ILogger<AuthenticationController> logger)
         {
             this.mediator = mediator;
+            this.logger = logger;
         }
 
         /// <summary>
@@ -39,8 +42,16 @@ namespace ResumeProject.API.Controllers
         [ProducesResponseType(typeof(LoginResponseDto), StatusCodes.Status200OK)]
         public async Task<IActionResult> Login([FromBody] LoginRequestDto loginDto)
         {
-            var result = await this.mediator.Send(new LoginCommand(loginDto.Email, loginDto.Password));
-            return this.Ok(result);
+            try
+            {
+                var result = await this.mediator.Send(new LoginCommand(loginDto.Email, loginDto.Password));
+                return this.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(ex, ex.Message);
+                return this.StatusCode(503, "⚠️ Login unavailable. The database used in Azure is out of credits. Please try again later.");
+            }
         }
 
         /// <summary>
@@ -68,7 +79,8 @@ namespace ResumeProject.API.Controllers
             }
             catch (Exception ex)
             {
-                return this.StatusCode(500, ex.Message);
+                this.logger.LogError(ex, ex.Message);
+                return this.StatusCode(503, "⚠️ Register unavailable. The database used in Azure is out of credits. Please try again later.");
             }
         }
 
