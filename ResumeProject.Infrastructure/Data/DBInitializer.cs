@@ -25,9 +25,17 @@ namespace ResumeProject.Infrastructure.Data
 
             foreach (var roleName in roleNames)
             {
-                if (!await roleManager.RoleExistsAsync(roleName))
+                try
                 {
-                    await roleManager.CreateAsync(new IdentityRole(roleName));
+                    if (!await roleManager.RoleExistsAsync(roleName))
+                    {
+                        await roleManager.CreateAsync(new IdentityRole(roleName));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log the exception or handle it as needed
+                    Console.WriteLine($"Error creating role {roleName}: {ex.Message}");
                 }
             }
         }
