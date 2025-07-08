@@ -18,7 +18,7 @@ namespace ResumeProject.API.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Authorize(Roles = "Admin")]
-    public class ResumeController : ControllerBase
+    public class ResumeController : BaseApiController
     {
         private readonly IMediator mediator;
 

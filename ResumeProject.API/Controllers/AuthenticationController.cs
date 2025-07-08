@@ -17,7 +17,7 @@ namespace ResumeProject.API.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [AllowAnonymous]
-    public class AuthenticationController : ControllerBase
+    public class AuthenticationController : BaseApiController
     {
         private readonly IMediator mediator;
 

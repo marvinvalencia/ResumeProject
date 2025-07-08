@@ -120,6 +120,12 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/error");
+}
+
 app.Run();
 
 #pragma warning restore SA1011, SA1200

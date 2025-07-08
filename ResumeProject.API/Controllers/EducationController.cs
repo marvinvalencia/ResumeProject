@@ -16,7 +16,7 @@ namespace ResumeProject.API.Controllers
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
-    public class EducationController : ControllerBase
+    public class EducationController : BaseApiController
     {
         private readonly IMediator mediator;
 

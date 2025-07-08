@@ -7,9 +7,6 @@ namespace ResumeProject.API.Controllers
     using MediatR;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
-    using ResumeProject.Application.Experience.Queries;
-    using ResumeProject.Application.Resume.Commands;
     using ResumeProject.Application.Skill.Commands;
     using ResumeProject.Application.Skill.Queries;
     using ResumeProject.Domain.Entities;
@@ -19,7 +16,7 @@ namespace ResumeProject.API.Controllers
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
-    public class SkillController : ControllerBase
+    public class SkillController : BaseApiController
     {
         private readonly IMediator mediator;
 
