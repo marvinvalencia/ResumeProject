@@ -47,6 +47,7 @@ namespace ResumeProject.Blazor.Services
             {
                 this.ErrorMessage = "⚠️ This is a static fallback because the API might be down or out of credits.";
             }
+
             return this.Resume;
         }
 

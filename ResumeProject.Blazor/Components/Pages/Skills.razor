@@ -48,11 +48,21 @@
                 <tr>
                     <td>
                         <div>
+                            <img class="@($"{javascript.Class}")" width="32" height="32" src="@javascript.Icon" alt="@javascript.Name" />
+                            <span class="font-semibold">@javascript.Name</span>
+                        </div>
+                    </td>
+                    <td>Proficient</td>
+                    <td>11</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div>
                             <img class="@($"{vb6.Class}")" width="32" height="32" src="@vb6.Icon" alt="@vb6.Name" />
                             <span class="font-semibold">@vb6.Name</span>
                         </div>
                     </td>
-                    <td>Expert</td>
+                    <td>Proficient</td>
                     <td>6</td>
                 </tr>
                 <tr>
@@ -184,5 +194,12 @@
         Name = "Python",
         Icon = "assets/icons/python.svg",
         Class = "python"
+    };
+
+    private Technology javascript = new Technology
+    {
+        Name = "Javascript",
+        Icon = "assets/icons/javascript.svg",
+        Class = "javascript"
     };
 }
