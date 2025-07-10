@@ -23,9 +23,7 @@ jobs:
         run: dotnet publish ResumeProject.Blazor -c Release -o publish
 
       - name: Zip published app
-        run: |
-        cd publish
-        zip -r ../my-app.zip ./*
+        run: cd publish && zip -r ../my-app.zip ./*
 
       - name: Deploy to Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v21
