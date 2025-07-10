@@ -33,5 +33,5 @@ jobs:
           application_name: ResumeWebsite
           environment_name: ResumeWebsite-env
           region: ap-southeast-1
-          version_label: ${{ ${{ github.sha }} }}
+          version_label: ${{ github.sha }}
           deployment_package:  my-app.zip
