@@ -11,6 +11,11 @@ on:
   push:
     branches:
       - master
+    paths:
+      - 'ResumeProject.API/**'
+      - 'ResumeProject.Application/**'
+      - 'ResumeProject.Domain/**'
+      - 'ResumeProject.Infrastructure/**'
   workflow_dispatch:
 
 jobs:
