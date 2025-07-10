@@ -1,7 +1,8 @@
 Hi, This is my personal learning project where I explore Blazor, Entity Framework Core, ASP.NET Core, and .NET 8.
 
-Blazor: [Resume Site](https://marvinvalencia-bkcredfvbtd3cbgs.southeastasia-01.azurewebsites.net) <br/>
-ASP.Net Core: [My API in Swagger](https://resume-project-api-ama4f0fbfde9cxge.southeastasia-01.azurewebsites.net/swagger/index.html)<br/>
+Azure Blazor Site: [Azure Resume Site](https://marvinvalencia-bkcredfvbtd3cbgs.southeastasia-01.azurewebsites.net) <br/>
+AWS Blazor Site: [AWS Resume Site](http://marvinvalencia.ap-southeast-1.elasticbeanstalk.com/) <br/>
+ASP.Net Core: [Azure API in Swagger](https://resume-project-api-ama4f0fbfde9cxge.southeastasia-01.azurewebsites.net/swagger/index.html)<br/>
 
 The aim is to build a full-stack web application while applying modern web development practices using the Microsoft ecosystem.
 
@@ -48,9 +49,10 @@ The aim is to build a full-stack web application while applying modern web devel
 ✅ Deploy REST API (ASP.NET Core) for Resume entities <br/>
 ✅ Deploy Blazor WebAssembly App  <br/>
 ✅ Setup GitHub Actions for CI/CD pipeline <br/>
+✅ Deploy to AWS (Elastic Beanstalk, ECS, or S3 + CloudFront for Blazor WASM) <br/>
+✅ Store cloud-specific config and secrets using Azure App Settings or AWS Parameter Store <br/>
+✅ Trigger GitHub Actions only when there are specific changes to a project <br/>
 🔲 Dockerize API and Blazor apps for consistent builds and multi-cloud support <br/>
-🔲 Deploy to AWS (Elastic Beanstalk, ECS, or S3 + CloudFront for Blazor WASM) <br/>
-🔲 Store cloud-specific config and secrets using Azure App Settings or AWS Parameter Store <br/>
 
 🧪 Testing <br/>
 🔲 Add unit tests for application services <br/>
