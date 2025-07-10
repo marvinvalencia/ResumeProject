@@ -29,7 +29,7 @@ jobs:
         run: dotnet publish ResumeProject.Blazor -c Release -o publish
 
       - name: Zip published app
-        run: zip -r  resumeblazor.zip publish/*
+        run: zip -r  my-app.zip publish/*
 
       - name: Deploy to Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v21
@@ -40,4 +40,4 @@ jobs:
           environment_name: ResumeWebsite-env
           region: ap-southeast-1
           version_label: ${{ github.run_number }}
-          deployment_package:  resumeblazor.zip
+          deployment_package:  my-app.zip
