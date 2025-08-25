@@ -1,42 +1,42 @@
-name: Deploy to AWS Elastic Beanstalk
-
-on:
-  push:
-    branches:
-      - master
-    paths:
-      - 'ResumeProject.Blazor/**'
-      - 'ResumeProject.Application/**'
-      - 'ResumeProject.Domain/**'
-      - 'ResumeProject.Infrastructure/**'
-  workflow_dispatch:
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 'v8.0.x'
-
-      - name: Publish
-        run: dotnet publish ResumeProject.Blazor -c Release -o publish
-
-      - name: Zip published app
-        run: cd publish && zip -r ../my-app.zip ./*
-
-      - name: Deploy to Elastic Beanstalk
-        uses: einaregilsson/beanstalk-deploy@v21
-        with:
-          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          application_name: ResumeWebsite
-          environment_name: ResumeWebsite-env
-          region: ap-southeast-1
-          version_label: ${{ github.run_number }}
-          deployment_package:  my-app.zip
+# name: Deploy to AWS Elastic Beanstalk
+#
+# on:
+#   push:
+#     branches:
+#       - master
+#     paths:
+#       - 'ResumeProject.Blazor/**'
+#       - 'ResumeProject.Application/**'
+#       - 'ResumeProject.Domain/**'
+#       - 'ResumeProject.Infrastructure/**'
+#   workflow_dispatch:
+#
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
+#
+#       - name: Setup .NET
+#         uses: actions/setup-dotnet@v3
+#         with:
+#           dotnet-version: 'v8.0.x'
+#
+#       - name: Publish
+#         run: dotnet publish ResumeProject.Blazor -c Release -o publish
+#
+#       - name: Zip published app
+#         run: cd publish && zip -r ../my-app.zip ./*
+#
+#       - name: Deploy to Elastic Beanstalk
+#         uses: einaregilsson/beanstalk-deploy@v21
+#         with:
+#           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#           application_name: ResumeWebsite
+#           environment_name: ResumeWebsite-env
+#           region: ap-southeast-1
+#           version_label: ${{ github.run_number }}
+#           deployment_package:  my-app.zip

@@ -40,6 +40,10 @@ namespace ResumeProject.Blazor
 
             builder.Services.AddScoped<ResumeService>();
 
+            builder.Services
+                .AddServerSideBlazor()
+                .AddCircuitOptions(o => o.DetailedErrors = true);
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
