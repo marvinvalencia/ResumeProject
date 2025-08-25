@@ -1,0 +1,154 @@
+/* Floating toggle button */
+.ai-chat__toggle {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 10000;
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    color: #111827;
+    border-radius: 999px;
+    padding: 10px 14px;
+    font-size: 14px;
+    box-shadow: 0 6px 20px rgba(0,0,0,.2);
+    cursor: pointer;
+}
+
+/* Chat panel */
+.ai-chat__panel {
+    position: fixed;
+    right: 24px;
+    bottom: 96px; /* leaves room for the toggle */
+    z-index: 10000;
+    width: clamp(320px, 28vw, 380px);
+    height: min(60vh, 520px);
+    display: grid;
+    grid-template-rows: 48px 1fr 56px;
+    background: #0f1115; /* dark neutral */
+    color: #e5e7eb;
+    border: 1px solid #1f2937;
+    border-radius: 14px;
+    box-shadow: 0 12px 40px rgba(0,0,0,.45);
+    overflow: hidden;
+    animation: ai-slide-up .18s ease-out;
+}
+
+/* Header */
+.ai-chat__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    background: #0b0d11;
+    border-bottom: 1px solid #1f2937;
+}
+
+.ai-chat__title {
+    font-weight: 700;
+    color: #cbd5e1;
+}
+
+.ai-chat__close {
+    border: 1px solid #334155;
+    background: #111827;
+    color: #e5e7eb;
+    border-radius: 10px;
+    padding: 6px 10px;
+    cursor: pointer;
+}
+
+/* Body */
+.ai-chat__body {
+    padding: 14px;
+    overflow: auto;
+    line-height: 1.45;
+}
+
+    .ai-chat__body p {
+        margin: 0;
+    }
+
+/* Footer */
+.ai-chat__footer {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+    padding: 10px 12px;
+    background: #0b0d11;
+    border-top: 1px solid #1f2937;
+}
+
+.ai-chat__input {
+    width: 100%;
+    padding: 8px 10px;
+    background: #10141b;
+    color: #e5e7eb;
+    border: 1px solid #2b3544;
+    border-radius: 10px;
+    outline: none;
+}
+
+.ai-chat__send {
+    padding: 8px 14px;
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+/* Small polish */
+@keyframes ai-slide-up {
+    from {
+        transform: translateY(8px);
+        opacity: .0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Ensure overlays aren’t clipped by parent containers */
+:root, body, .page, main {
+    overflow: visible !important;
+}
+
+/* Message bubbles */
+.msg {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+    .msg.user {
+        justify-content: flex-end;
+    }
+
+    .msg.assistant {
+        justify-content: flex-start;
+    }
+
+.msg-bubble {
+    padding: 8px 12px;
+    border-radius: 14px;
+    max-width: 75%;
+    line-height: 1.4;
+}
+
+.msg.user .msg-bubble {
+    background: #2563eb;
+    color: #fff;
+    border-bottom-right-radius: 4px;
+}
+
+.msg.assistant .msg-bubble {
+    background: #374151;
+    color: #e5e7eb;
+    border-bottom-left-radius: 4px;
+}
+
+.placeholder {
+    opacity: .6;
+    font-style: italic;
+}

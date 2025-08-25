@@ -4,8 +4,10 @@
 
 namespace ResumeProject.Blazor
 {
+    using OpenAI.Chat;
     using ResumeProject.Blazor.Components;
     using ResumeProject.Blazor.Services;
+    using ResumeProject.Blazor.Services.GroqApiLibrary;
 
     /// <summary>
     /// The Program class is the entry point for the Blazor application.
@@ -20,6 +22,12 @@ namespace ResumeProject.Blazor
         {
             var builder = WebApplication.CreateBuilder(args);
             var baseUrl = builder.Configuration["ApiSettings:BaseUrl"];
+
+            builder.Services.AddSingleton(sp =>
+            {
+                var apiKey = builder.Configuration["GROC_API_KEY"];
+                return new GroqApiClient(apiKey);
+            });
 
             // Add services to the container.
             builder.Services.AddRazorComponents()

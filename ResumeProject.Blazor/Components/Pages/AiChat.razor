@@ -1,0 +1,125 @@
+﻿@using System.Text.Json.Nodes;
+@using ResumeProject.Blazor.Services.GroqApiLibrary
+@inject GroqApiClient GroqAI
+
+<button class="ai-chat__toggle" @onclick="ToggleChat" aria-label="Open chat">
+    💬 Chat
+</button>
+
+@if (ShowChat)
+{
+    <section class="ai-chat__panel" role="dialog" aria-label="AI Chat">
+        <header class="ai-chat__header">
+            <span class="ai-chat__title">AI Chat</span>
+            <button class="ai-chat__close" @onclick="ToggleChat" aria-label="Close">✖</button>
+        </header>
+
+        <div class="ai-chat__body">
+            @if (Messages.Count == 0)
+            {
+                <p class="placeholder">No messages yet. Say hello 👋</p>
+            }
+            else
+            {
+                @foreach (var msg in Messages)
+                {
+                    <div class="msg @(msg.Role)">
+                        <div class="msg-bubble">@msg.Content</div>
+                    </div>
+                }
+            }
+        </div>
+
+        <footer class="ai-chat__footer">
+            <input class="ai-chat__input"
+                   placeholder="Type a message..."
+                   @bind="Draft"
+                   @bind:event="oninput"
+                   @onkeydown="HandleKeyDown" />
+            <button class="ai-chat__send" @onclick="Send">Send</button>
+        </footer>
+    </section>
+}
+
+@code {
+    bool ShowChat = false;
+    bool FirstOpen = true;
+    record ChatMessage(string Role, string Content);
+
+    List<ChatMessage> Messages = new();
+    string Draft = string.Empty;
+
+    private void ToggleChat()
+    {
+        ShowChat = !ShowChat;
+        if (ShowChat && FirstOpen)
+        {
+            Messages.Add(new ChatMessage("assistant", "Hello 👋 I’m your AI assistant. How can I help today?"));
+            FirstOpen = false;
+        }
+    }
+
+    private async void Send()
+    {
+        var text = Draft?.Trim();
+        if (string.IsNullOrEmpty(text))
+        {
+            return;
+        }
+
+        Messages.Add(new ChatMessage("user", text));
+        Draft = string.Empty;
+
+        JsonObject request = new JsonObject
+        {
+            ["model"] = "openai/gpt-oss-20b",
+            ["messages"] = new JsonArray
+            {
+                new JsonObject
+                {
+                    ["role"] = "system",
+                    ["content"] = @"You are a helpful assistant for my resume project website. 
+                                    You can explain how did I code you which I made use of a free AI API in GrocCloud. 
+                                    I've made use of https://github.com/jgravelle/GroqApiLibrary to code in .NET. 
+                                    This is a blazor app as well. 
+
+                                    If there are questions regarding my address, phone number and email address, say that you can't answer as per your privacy policy.
+                                    If there are questions regarding my resume, you can answer based on the following details:
+                                    Summary: I am a Software Developer with 11 years of experience. My main tech stacks are primarily .NET focused.
+
+                                    Work Experience:
+                                    I am currently working with J Mantua IT Services Inc as a Part Time R&D Consultant, I mostly focus on open-source systems such as Wazuh (SIEM) and ERPNext (cloud-based ERP), resolving configuration issues, developing scripts, automating jobs, and integrating APIs to enhance system functionality and efficiency.
+                                    November 2016 - July 2024 - I was an Application Support Developer for Merlot Aero Limited. I managed the Geneva and Merlot flight planning system applications, fixing numerous bugs, conducting design and code reviews, and mentoring junior engineers while collaborating with cross-functional teams. Frequently served as Dev Support during on-call shifts, addressing client performance issues by gathering diagnostic data and delivering effective workarounds and fixes within tight timelines.
+                                    March 2013 - November 2016 - I was a Software Engineering Analyst for Navitaire. I managed the Geneva application, which utilized VB6 for the UI and C# for the backend, ensuring stability and functionality across both layers. Regularly fixed bugs and conducted thorough investigations to identify root causes, providing detailed analysis and documentation for each issue.
+                                    May 2011 - April 2011 - I was an Intern for Smart Communications Inc.
+
+                                    Education:
+                                    I studied Computer Science in De La Salle University.
+
+                                    Skills:
+                                    C#, .NET, WPF, WinForms, VB6, SQL Server, HTML, CSS, JavaScript, Git, REST APIs, Agile Methodologies, Telerik, Python, Unit Testing, Entity Framework, Microservices
+
+                                    Interests:
+                                    I love to play video games, watch movies and tv series. I also love to travel and explore new places and scuba dive with my wife."
+                },
+                new JsonObject
+                {
+                    ["role"] = "user",
+                    ["content"] = text
+                }
+            }
+        };
+
+        JsonObject result = await GroqAI.CreateChatCompletionAsync(request);
+        Console.WriteLine(result?["choices"]?[0]?["message"]?["content"]?.ToString());
+        Messages.Add(new ChatMessage("assistant", result?["choices"]?[0]?["message"]?["content"]?.ToString()));
+    }
+
+    private void HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !e.ShiftKey)
+        {
+            Send();
+        }
+    }
+}
