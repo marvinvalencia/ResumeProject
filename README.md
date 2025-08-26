@@ -58,6 +58,13 @@ The aim is to build a full-stack web application while applying modern web devel
 🔲 Add unit tests for application services <br/>
 🔲 Add integration tests for API endpoints <br/>
 
+🤖 AI / Assistant Features
+✅ Integrate a basic AI chatbot (UI + backend service)
+✅ Use GroqCloud API for responses
+✅ Add a Blazor component for live chat
+🔲 Store or log user prompts for context/training
+🔲 Use PostgreSQL with pgvector extension for AI/RAG-based features
+
 📌 Tech Stack <br/>
 Frontend: Blazor WebAssembly /<br/>
 Backend: ASP.NET Core (.NET 8) <br/>
