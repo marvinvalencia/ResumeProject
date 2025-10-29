@@ -1,6 +1,8 @@
-﻿@using System.Text.Json.Nodes;
+﻿@using System.Text.Json.Nodes
 @using ResumeProject.Blazor.Services.GroqApiLibrary
+@using Microsoft.AspNetCore.Hosting
 @inject GroqApiClient GroqAI
+@inject IWebHostEnvironment Env
 
 <button class="ai-chat__toggle" @onclick="ToggleChat" aria-label="Open chat">
     💬 Chat
@@ -70,8 +72,7 @@
         Messages.Add(new ChatMessage("user", text));
         Draft = string.Empty;
 
-        var systemPromptPath = Path.Combine("systemprompt.txt");
-        string systemPrompt = await File.ReadAllTextAsync(systemPromptPath);
+        var systemPrompt = await LoadSystemPromptAsync();
 
         JsonObject request = new JsonObject
         {
@@ -100,12 +101,30 @@
         StateHasChanged();
     }
 
-
     private void HandleKeyDown(KeyboardEventArgs e)
     {
         if (e.Key == "Enter" && !e.ShiftKey)
         {
             Send();
         }
+    }
+
+    private async Task<string> LoadSystemPromptAsync()
+    {
+        try
+        {
+            var file = Env.WebRootFileProvider.GetFileInfo("systemprompt.txt");
+            if (file.Exists)
+                return await File.ReadAllTextAsync(file.PhysicalPath);
+
+            var p1 = Path.Combine(Env.WebRootPath ?? "", "systemprompt.txt");
+            if (File.Exists(p1)) return await File.ReadAllTextAsync(p1);
+
+            var p2 = Path.Combine(AppContext.BaseDirectory, "wwwroot", "systemprompt.txt");
+            if (File.Exists(p2)) return await File.ReadAllTextAsync(p2);
+        }
+        catch {  }
+
+        return "You are a helpful assistant for my Resume Project website.";
     }
 }
