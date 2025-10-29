@@ -70,55 +70,36 @@
         Messages.Add(new ChatMessage("user", text));
         Draft = string.Empty;
 
+        var systemPromptPath = Path.Combine("systemprompt.txt");
+        string systemPrompt = await File.ReadAllTextAsync(systemPromptPath);
+
         JsonObject request = new JsonObject
         {
             ["model"] = "openai/gpt-oss-20b",
             ["messages"] = new JsonArray
+        {
+            new JsonObject
             {
-                new JsonObject
-                {
-                    ["role"] = "system",
-                    ["content"] = @"You are a helpful assistant for my Resume Project website.
-
-                                    Behavior Guidelines:
-                                    - You can explain how you were coded. Specifically, mention that you were integrated using a free AI API in GrocCloud, with the .NET wrapper library at https://github.com/jgravelle/GroqApiLibrary, and built inside a Blazor app.
-                                    - If asked about my personal contact information (address, phone number, email), respond that you cannot provide it due to privacy policy.
-                                    - If asked about my resume, provide answers based on the resume details below.
-                                    - If asked something unrelated to the resume or project, do your best to give a concise, helpful answer, or redirect to relevant topics.
-
-                                    Resume Details:
-                                    Summary:
-                                    - I am a Software Developer with 11 years of experience, primarily focused on the .NET ecosystem.
-
-                                    Work Experience:
-                                    - Current: Part-Time R&D Consultant at J Mantua IT Services Inc. Focus on open-source systems (Wazuh SIEM, ERPNext ERP). Work includes resolving configuration issues, developing scripts, automating jobs, and integrating APIs to improve system functionality and efficiency.
-                                    - Nov 2016 – Jul 2024: Application Support Developer at Merlot Aero Limited. Maintained Geneva and Merlot airline operations systems. Fixed bugs, conducted design/code reviews, mentored juniors, collaborated cross-functionally. Served on-call (Dev Support) to resolve client performance issues quickly.
-                                    - Mar 2013 – Nov 2016: Software Engineering Analyst at Navitaire. Managed Geneva application (VB6 UI, C# backend). Investigated/fixed bugs, provided root cause analyses, ensured stability.
-                                    - May 2011 – Apr 2011: Intern at Smart Communications Inc.
-
-                                    Education:
-                                    - Bachelor of Computer Science, De La Salle University
-
-                                    Skills:
-                                    - C#, .NET, WPF, WinForms, VB6, SQL Server, HTML, CSS, JavaScript, Git, REST APIs, Agile, Telerik, Python, Unit Testing, Entity Framework, Microservices, Blazor
-
-                                    Interests:
-                                    - Playing video games, watching movies/TV series, traveling, and scuba diving with my wife."
-                },
-                new JsonObject
-                {
-                    ["role"] = "user",
-                    ["content"] = text
-                }
+                ["role"] = "system",
+                ["content"] = systemPrompt
+            },
+            new JsonObject
+            {
+                ["role"] = "user",
+                ["content"] = text
             }
+        }
         };
 
         JsonObject result = await GroqAI.CreateChatCompletionAsync(request);
-        Console.WriteLine(result?["choices"]?[0]?["message"]?["content"]?.ToString());
-        Messages.Add(new ChatMessage("assistant", result?["choices"]?[0]?["message"]?["content"]?.ToString()));
+        var response = result?["choices"]?[0]?["message"]?["content"]?.ToString();
+
+        Console.WriteLine(response);
+        Messages.Add(new ChatMessage("assistant", response!));
 
         StateHasChanged();
     }
+
 
     private void HandleKeyDown(KeyboardEventArgs e)
     {
